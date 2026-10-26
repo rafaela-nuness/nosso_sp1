@@ -1,0 +1,93 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <main class="pagina-login">
+
+        <section class="painel-esquerdo">
+            <a href="/" class="logo">nosso<span>sp.</span></a>
+
+            <div class="mensagem">
+                <p class="etiqueta">JORNALISMO LOCAL E INDEPENDENTE</p>
+
+                <h1>As histórias<br>da nossa cidade<br><span>começam aqui.</span></h1>
+
+                <p>
+                    Entre para acompanhar notícias, descobrir histórias
+                    e participar da comunidade do Nosso SP.
+                </p>
+            </div>
+
+            <p class="rodape-esquerdo">
+                Informação local. Vozes reais. Uma cidade inteira.
+            </p>
+        </section>
+
+        <section class="painel-direito">
+
+            <div class="formulario-container">
+                <a href="/" class="voltar">← Voltar para o início</a>
+
+                <p class="etiqueta">BEM-VINDO DE VOLTA</p>
+
+                <h2>Entre na sua conta.</h2>
+
+                <p class="subtitulo">
+                    Informe seus dados para continuar.
+                </p>
+
+                <form action="#" method="post">
+                    {% csrf_token %}
+
+                    <div class="campo">
+                        <label for="email">E-mail</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="voce@exemplo.com"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="senha">Senha</label>
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="botao-entrar">
+                        Entrar na conta <span>→</span>
+                    </button>
+                </form>
+
+                <p class="aviso">
+                    Esta tela é uma versão visual. O login ainda será
+                    conectado ao sistema de autenticação do Django.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

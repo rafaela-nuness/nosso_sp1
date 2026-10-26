@@ -1,0 +1,276 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nosso SP — notícias, histórias e acontecimentos dos bairros de São Paulo.">
+    <title>Nosso SP — A cidade não para.</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="topline">
+        <span>JORNALISMO DE PERTO</span>
+        <span class="topline-center">SÃO PAULO, BRASIL</span>
+        <span>FEITO PARA QUEM VIVE A CIDADE ↗</span>
+    </div>
+
+    <header class="header">
+        <a href="/" class="logo">nosso<span>SP.</span></a>
+
+        <nav class="navigation">
+            <a href="#ultimas">Notícias</a>
+            <a href="/explorar/">Explorar</a>
+            <a href="#sobre">Sobre nós</a>
+        </nav>
+
+        <a href="/login/" class="header-button">
+            Área do jornalista <span>↗</span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+            ☰
+        </button>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">
+                    <span class="live-dot"></span>
+                    <span>O PULSO DA CIDADE</span>
+                    <span class="eyebrow-line"></span>
+                    <span>01 / 04</span>
+                </div>
+
+                <h1>
+                    A cidade<br>
+                    não para.<br>
+                    <em>A gente</em><br>
+                    <span class="title-highlight">conta.</span>
+                </h1>
+
+                <div class="hero-bottom">
+                    <p>
+                        Histórias que acontecem na sua rua,
+                        no seu bairro e em cada canto de São Paulo.
+                    </p>
+
+                    <a href="#ultimas" class="round-link" aria-label="Explorar notícias">
+                        <span>↓</span>
+                    </a>
+                </div>
+
+                <div class="hero-index">
+                    <span>NOTÍCIAS QUE TÊM ENDEREÇO.</span>
+                    <span>DESDE AQUI, PARA TODO MUNDO.</span>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <img
+                    class="hero-image"
+                    src="https://images.unsplash.com/photo-1543059080-f9b1272213d5?auto=format&fit=crop&w=1400&q=85"
+                    alt="Vista urbana de São Paulo"
+                >
+
+                <div class="image-overlay"></div>
+
+                <div class="image-label">
+                    <span class="label-dot"></span>
+                    <span>UMA CIDADE, MILHÕES DE HISTÓRIAS</span>
+                </div>
+
+                <div class="image-caption">
+                    <span>01 — OLHAR LOCAL</span>
+                    <span>↓ DESCUBRA SÃO PAULO</span>
+                </div>
+
+                <div class="image-stamp">
+                    <span>SP</span>
+                    <span>É</span>
+                    <span>NOSSO.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="ticker" aria-label="Temas do Nosso SP">
+            <div class="ticker-track">
+                <span>NOTÍCIA LOCAL</span><span class="ticker-star">✳</span>
+                <span>VOZES DA CIDADE</span><span class="ticker-star">✳</span>
+                <span>O QUE ACONTECE PERTO</span><span class="ticker-star">✳</span>
+                <span>SÃO PAULO EM MOVIMENTO</span><span class="ticker-star">✳</span>
+                <span>NOTÍCIA LOCAL</span><span class="ticker-star">✳</span>
+                <span>VOZES DA CIDADE</span><span class="ticker-star">✳</span>
+                <span>O QUE ACONTECE PERTO</span><span class="ticker-star">✳</span>
+                <span>SÃO PAULO EM MOVIMENTO</span><span class="ticker-star">✳</span>
+            </div>
+        </section>
+
+        <section class="news-section" id="ultimas">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">01 — FIQUE POR DENTRO</span>
+                    <h2>O que está <em>rolando.</em></h2>
+                </div>
+
+                <a href="#categorias" class="text-link">
+                    Explore os assuntos <span>↗</span>
+                </a>
+            </div>
+
+            <div class="news-grid">
+                <article class="news-card news-card-featured">
+                    <a href="/noticia/" class="news-image-link">
+                        <img
+                            src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1000&q=85"
+                            alt="Paisagem urbana de uma grande cidade"
+                        >
+                        <span class="category-tag">CIDADE</span>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <div class="news-meta">
+                        <span>REPORTAGEM ESPECIAL</span>
+                        <span>01 / DESTAQUE</span>
+                    </div>
+                    <h3><a href="/noticia/">A cidade vista por quem vive nela todos os dias</a></h3>
+                    <p>Histórias, desafios e transformações que fazem parte da vida urbana.</p>
+                </article>
+
+                <article class="news-card">
+                    <a href="/noticia/" class="news-image-link">
+                        <img
+                            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=85"
+                            alt="Comércio e vitrines de rua"
+                        >
+                        <span class="category-tag">ECONOMIA</span>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <div class="news-meta">
+                        <span>VIDA LOCAL</span>
+                        <span>02 / BAIRROS</span>
+                    </div>
+                    <h3><a href="/noticia/">O comércio de bairro e as histórias por trás das portas</a></h3>
+                    <p>Conheça as pessoas que movimentam a economia perto de você.</p>
+                </article>
+
+                <article class="news-card">
+                    <a href="/noticia/" class="news-image-link">
+                        <img
+                            src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=800&q=85"
+                            alt="Área verde em ambiente urbano"
+                        >
+                        <span class="category-tag">CULTURA E LAZER</span>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                    <div class="news-meta">
+                        <span>ESPAÇOS PÚBLICOS</span>
+                        <span>03 / CIDADE</span>
+                    </div>
+                    <h3><a href="/noticia/">Os espaços que tornam a cidade mais viva</a></h3>
+                    <p>Parques, praças e lugares que conectam pessoas e comunidades.</p>
+                </article>
+            </div>
+
+            <div class="news-bottom">
+                <span>CONTEÚDO DEMONSTRATIVO</span>
+                <a href="/noticia/">ABRIR UMA MATÉRIA <span>↗</span></a>
+            </div>
+        </section>
+
+        <section class="explore-section" id="categorias">
+            <div class="explore-intro">
+                <span class="section-kicker">02 — ESCOLHA SEU OLHAR</span>
+                <h2>São Paulo<br>por <em>inteiro.</em></h2>
+                <p>
+                    Cada região tem sua própria história.
+                    Qual delas você quer descobrir?
+                </p>
+            </div>
+
+            <div class="category-list">
+                <a href="#ultimas" class="category-item">
+                    <span class="category-number">01</span>
+                    <span class="category-name">Cotidiano</span>
+                    <span class="category-description">A vida como ela acontece</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="#ultimas" class="category-item">
+                    <span class="category-number">02</span>
+                    <span class="category-name">Cultura</span>
+                    <span class="category-description">Arte, eventos e pessoas</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="#ultimas" class="category-item">
+                    <span class="category-number">03</span>
+                    <span class="category-name">Comunidade</span>
+                    <span class="category-description">As vozes dos bairros</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="#ultimas" class="category-item">
+                    <span class="category-number">04</span>
+                    <span class="category-name">Mobilidade</span>
+                    <span class="category-description">Os caminhos da cidade</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="about-section" id="sobre">
+            <div class="about-mark">SP<span>✳</span></div>
+
+            <div class="about-content">
+                <span class="section-kicker">03 — NOSSA IDEIA</span>
+                <h2>O mundo é grande.<br><em>A notícia começa perto.</em></h2>
+                <p>
+                    O Nosso SP nasceu para aproximar as pessoas
+                    do que acontece ao redor delas. Mais espaço
+                    para as histórias locais, para as comunidades
+                    e para quem faz São Paulo acontecer.
+                </p>
+                <a href="/login/" class="about-button">
+                    Faça parte dessa história <span>↗</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a href="/" class="logo footer-logo">nosso<span>SP.</span></a>
+
+        <p>Feito para quem vive a cidade.</p>
+
+        <a href="#top" class="back-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+            VOLTAR AO TOPO ↑
+        </a>
+
+        <span class="footer-copy">© 2026 NOSSO SP</span>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const navigation = document.querySelector(".navigation");
+
+        menuToggle.addEventListener("click", function () {
+            navigation.classList.toggle("navigation-open");
+        });
+
+        navigation.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navigation.classList.remove("navigation-open");
+            });
+        });
+    </script>
+
+</body>
+</html>

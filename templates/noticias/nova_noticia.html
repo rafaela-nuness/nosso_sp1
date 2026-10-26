@@ -1,0 +1,96 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova notícia | Nosso SP</title>
+    <link rel="stylesheet" href="{% static 'css/nova_noticia.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="topbar">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/painel/">Painel</a>
+            <a href="/noticia/">Notícias</a>
+            <a href="/login/" class="logout">Sair ↗</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <a href="/painel/" class="back-link">← Voltar ao painel</a>
+
+        <section class="intro">
+            <p class="eyebrow">REDAÇÃO · NOSSO SP</p>
+            <h1>Uma nova história<br>começa aqui<span>.</span></h1>
+            <p>Compartilhe o que acontece na sua comunidade.</p>
+        </section>
+
+        <div class="editor-layout">
+            <form class="editor-form" onsubmit="event.preventDefault(); alert('A publicação será conectada ao sistema na próxima etapa!');">
+                <label for="titulo">Título da notícia</label>
+                <input id="titulo" type="text" placeholder="Escreva um título que chame a atenção..." required>
+
+                <label for="resumo">Resumo</label>
+                <textarea id="resumo" rows="3" placeholder="Conte em poucas palavras o que aconteceu..." required></textarea>
+
+                <div class="form-row">
+                    <div>
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" required>
+                            <option value="">Escolha uma categoria</option>
+                            <option>Cidade</option>
+                            <option>Política</option>
+                            <option>Cultura</option>
+                            <option>Esportes</option>
+                            <option>Educação</option>
+                            <option>Meio ambiente</option>
+                            <option>Segurança</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="local">Local da notícia</label>
+                        <input id="local" type="text" placeholder="Ex.: Itaquera, São Paulo">
+                    </div>
+                </div>
+
+                <label for="imagem">Imagem de capa</label>
+                <input id="imagem" type="url" placeholder="Cole o endereço de uma imagem (URL)">
+
+                <label for="conteudo">Conteúdo da notícia</label>
+                <textarea id="conteudo" rows="10" placeholder="Desenvolva a notícia com os detalhes, informações e contexto..." required></textarea>
+
+                <label for="tags">Palavras-chave</label>
+                <input id="tags" type="text" placeholder="Ex.: comunidade, mobilidade, bairro">
+
+                <div class="form-actions">
+                    <button type="reset" class="secondary-button">Limpar formulário</button>
+                    <button type="submit" class="primary-button">Publicar notícia ↗</button>
+                </div>
+            </form>
+
+            <aside class="side-note">
+                <div class="note-icon">✳</div>
+                <p class="eyebrow">ANTES DE PUBLICAR</p>
+                <h2>Jornalismo próximo das pessoas.</h2>
+                <p>Confira as informações, revise o texto e indique corretamente onde a notícia aconteceu.</p>
+                <div class="tip">
+                    <strong>01 — Seja claro</strong>
+                    <span>Prefira títulos objetivos e informativos.</span>
+                </div>
+                <div class="tip">
+                    <strong>02 — Confira os fatos</strong>
+                    <span>Verifique nomes, datas e informações.</span>
+                </div>
+                <div class="tip">
+                    <strong>03 — Valorize o território</strong>
+                    <span>Informe o bairro ou município relacionado.</span>
+                </div>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>

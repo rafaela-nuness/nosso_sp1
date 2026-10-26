@@ -1,0 +1,144 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do jornalista | Nosso SP</title>
+    <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <p class="menu-label">MENU PRINCIPAL</p>
+
+        <nav class="menu">
+            <a href="/painel/" class="menu-item active">▦ &nbsp; Visão geral</a>
+            <a href="/#ultimas" class="menu-item">▤ &nbsp; Notícias</a>
+            <a href="/login/" class="menu-item">↪ &nbsp; Sair</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <span>Portal de notícias</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">ÁREA DO JORNALISTA</p>
+                <h1>Painel de controle</h1>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">JS</div>
+                <div>
+                    <strong>João Silva</strong>
+                    <span>Jornalista</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">NOSSO SP · REDAÇÃO</p>
+                <h2>Suas histórias merecem ser contadas.</h2>
+                <p>Organize suas publicações e acompanhe as notícias do portal.</p>
+            </div>
+
+            <a href="/nova-noticia/" class="primary-button">＋ Nova notícia</a>
+        </section>
+
+        <section class="stats">
+            <article class="stat-card">
+                <span class="stat-icon">▤</span>
+                <p>Minhas notícias</p>
+                <strong>12</strong>
+                <span class="stat-description">Publicações cadastradas</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">◷</span>
+                <p>Rascunhos</p>
+                <strong>03</strong>
+                <span class="stat-description">Aguardando publicação</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">◉</span>
+                <p>Comentários</p>
+                <strong>28</strong>
+                <span class="stat-description">Nas suas publicações</span>
+            </article>
+        </section>
+
+        <section class="news-section" id="noticias">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ACOMPANHAMENTO</p>
+                    <h2>Notícias recentes</h2>
+                </div>
+
+                <a href="/#ultimas" class="text-link">Ver notícias →</a>
+            </div>
+
+            <div class="news-table">
+                <div class="table-header">
+                    <span>TÍTULO</span>
+                    <span>CATEGORIA</span>
+                    <span>STATUS</span>
+                    <span>DATA</span>
+                </div>
+
+                <div class="news-row">
+                    <div class="news-title">
+                        <strong>Novas iniciativas transformam bairros de São Paulo</strong>
+                        <span>Por João Silva</span>
+                    </div>
+                    <span class="category">Cidade</span>
+                    <span class="status published">Publicado</span>
+                    <span class="date">24 out. 2026</span>
+                </div>
+
+                <div class="news-row">
+                    <div class="news-title">
+                        <strong>Projeto cultural abre espaço para artistas locais</strong>
+                        <span>Por João Silva</span>
+                    </div>
+                    <span class="category">Cultura</span>
+                    <span class="status draft">Rascunho</span>
+                    <span class="date">22 out. 2026</span>
+                </div>
+
+                <div class="news-row">
+                    <div class="news-title">
+                        <strong>Comunidade organiza ação de sustentabilidade</strong>
+                        <span>Por João Silva</span>
+                    </div>
+                    <span class="category">Ambiente</span>
+                    <span class="status published">Publicado</span>
+                    <span class="date">20 out. 2026</span>
+                </div>
+            </div>
+
+            <p class="demo-note">
+                Dados ilustrativos — as informações reais serão conectadas ao banco de dados posteriormente.
+            </p>
+        </section>
+
+        <footer class="footer">
+            <a href="/" class="footer-home">← Voltar à página inicial</a>
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

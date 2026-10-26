@@ -1,0 +1,249 @@
+
+:root {
+    --creme: #F3EBDD;
+    --terracota: #C65D3A;
+    --verde: #343D2E;
+    --amarelo: #E4B85E;
+    --escuro: #262722;
+    --branco: #FFFDF8;
+    --cinza: #77776F;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Manrope', sans-serif;
+    background-color: var(--creme);
+    color: var(--escuro);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pagina-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+/* PAINEL ESQUERDO */
+
+.painel-esquerdo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 45px 9%;
+    background-color: var(--verde);
+    color: var(--branco);
+}
+
+.logo {
+    width: fit-content;
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    letter-spacing: -1.5px;
+}
+
+.logo span {
+    color: var(--amarelo);
+}
+
+.mensagem {
+    max-width: 500px;
+    margin: 60px auto;
+}
+
+.etiqueta {
+    color: var(--terracota);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.painel-esquerdo .etiqueta {
+    color: var(--amarelo);
+}
+
+.mensagem h1 {
+    margin: 25px 0;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 4.5vw, 66px);
+    font-weight: normal;
+    line-height: 1.12;
+    letter-spacing: -1px;
+}
+
+.mensagem h1 span {
+    color: var(--amarelo);
+    font-style: italic;
+}
+
+.mensagem > p:last-child {
+    max-width: 380px;
+    color: rgba(255, 253, 248, 0.75);
+    font-size: 13px;
+    line-height: 2;
+}
+
+.rodape-esquerdo {
+    color: rgba(255, 253, 248, 0.6);
+    font-size: 11px;
+}
+
+/* PAINEL DIREITO */
+
+.painel-direito {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 9%;
+    background-color: var(--branco);
+}
+
+.formulario-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 65px;
+    color: var(--cinza);
+    font-size: 12px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.voltar:hover {
+    color: var(--terracota);
+}
+
+.formulario-container h2 {
+    margin-top: 15px;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(35px, 4vw, 47px);
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+.subtitulo {
+    margin: 13px 0 35px;
+    color: var(--cinza);
+    font-size: 13px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 23px;
+}
+
+.campo label {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.campo input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #E1DED6;
+    border-radius: 4px;
+    outline: none;
+    background-color: var(--branco);
+    color: var(--escuro);
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color 0.2s;
+}
+
+.campo input::placeholder {
+    color: #AAA79F;
+}
+
+.campo input:focus {
+    border-color: var(--terracota);
+}
+
+.botao-entrar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    padding: 17px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--terracota);
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.botao-entrar:hover {
+    background-color: var(--verde);
+}
+
+.botao-entrar span {
+    font-size: 20px;
+}
+
+.aviso {
+    margin-top: 28px;
+    color: var(--cinza);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+/* TELAS MENORES */
+
+@media (max-width: 800px) {
+    .pagina-login {
+        grid-template-columns: 1fr;
+    }
+
+    .painel-esquerdo {
+        min-height: auto;
+        padding: 25px 7%;
+    }
+
+    .mensagem {
+        margin: 55px 0 35px;
+    }
+
+    .mensagem h1 {
+        font-size: 45px;
+    }
+
+    .rodape-esquerdo {
+        display: none;
+    }
+
+    .painel-direito {
+        padding: 45px 7%;
+    }
+
+    .voltar {
+        margin-bottom: 45px;
+    }
+}
+
+@media (max-width: 420px) {
+    .mensagem h1 {
+        font-size: 38px;
+    }
+
+    .formulario-container h2 {
+        font-size: 34px;
+    }
+}

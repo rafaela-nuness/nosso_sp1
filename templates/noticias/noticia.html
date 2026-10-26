@@ -1,0 +1,150 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícia | Nosso SP</title>
+    <link rel="stylesheet" href="{% static 'css/noticia.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="cabecalho">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <nav class="menu">
+            <a href="/">Início</a>
+            <a href="/#noticias" class="ativo">Notícias</a>
+            <a href="/#categorias">Categorias</a>
+            <a href="/#sobre">Sobre nós</a>
+        </nav>
+
+        <a href="/login/" class="botao-cabecalho">Entrar ↗</a>
+    </header>
+
+    <main class="pagina-noticia">
+
+        <a href="/#noticias" class="voltar">← Voltar para as notícias</a>
+
+        <article>
+            <div class="cabecalho-noticia">
+                <span class="categoria">COMUNIDADE</span>
+
+                <h1>Ideias locais que aproximam as pessoas e transformam os bairros</h1>
+
+                <p class="resumo">
+                    Conheça iniciativas comunitárias e histórias de moradores
+                    que ajudam a construir uma cidade melhor.
+                </p>
+
+                <div class="informacoes">
+                    <div class="avatar">NS</div>
+                    <div>
+                        <p class="autor">Redação Nosso SP</p>
+                        <p class="data">25 de outubro de 2026 · 5 min de leitura</p>
+                    </div>
+                </div>
+            </div>
+
+            <figure class="imagem-principal">
+                <img
+                    src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1600&q=85"
+                    alt="Vista urbana de uma cidade"
+                >
+                <figcaption>
+                    A vida nos bairros é feita de encontros, iniciativas e histórias.
+                </figcaption>
+            </figure>
+
+            <div class="conteudo-noticia">
+                <p class="abertura">
+                    Uma cidade é muito mais do que suas ruas e construções.
+                    Ela é formada pelas pessoas, pelas relações entre vizinhos
+                    e pelas ideias que nascem dentro das comunidades.
+                </p>
+
+                <h2>Quando a comunidade se une</h2>
+
+                <p>
+                    Em diferentes bairros, iniciativas locais podem incentivar
+                    a convivência, fortalecer os vínculos entre moradores e
+                    criar novas possibilidades para os espaços compartilhados.
+                </p>
+
+                <p>
+                    Conhecer essas experiências também é uma forma de valorizar
+                    quem participa do cotidiano da cidade e contribui para
+                    transformar a realidade ao seu redor.
+                </p>
+
+                <blockquote>
+                    As histórias locais ajudam a compreender a cidade
+                    a partir de quem vive nela.
+                </blockquote>
+
+                <h2>Dar voz a quem vive a cidade</h2>
+
+                <p>
+                    O jornalismo local aproxima a informação das pessoas.
+                    Ao registrar acontecimentos, ouvir diferentes perspectivas
+                    e divulgar iniciativas, contribui para uma comunidade
+                    mais informada e participativa.
+                </p>
+
+                <p>
+                    Esta matéria é um exemplo demonstrativo do portal Nosso SP.
+                    O conteúdo real será cadastrado pelos jornalistas quando
+                    o sistema estiver conectado ao banco de dados.
+                </p>
+            </div>
+        </article>
+
+        <section class="comentarios">
+            <div class="titulo-comentarios">
+                <p class="etiqueta">PARTICIPE DA CONVERSA</p>
+                <h2>Comentários<span>.</span></h2>
+                <p>Compartilhe sua opinião com respeito.</p>
+            </div>
+
+            <form class="formulario-comentario" action="#" method="post">
+                {% csrf_token %}
+
+                <label for="comentario">Seu comentário</label>
+
+                <textarea
+                    id="comentario"
+                    name="comentario"
+                    rows="4"
+                    placeholder="O que você pensa sobre essa notícia?"
+                    required
+                ></textarea>
+
+                <button type="submit" class="botao-comentar">
+                    Enviar comentário →
+                </button>
+            </form>
+
+            <div class="comentario-exemplo">
+                <div class="avatar avatar-claro">LM</div>
+                <div>
+                    <p class="nome-comentario">Leitor(a) demonstrativo(a)</p>
+                    <p class="texto-comentario">
+                        Os comentários reais aparecerão aqui quando a
+                        funcionalidade estiver implementada.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="rodape">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+        <p>Informação local. Vozes reais. Uma cidade inteira.</p>
+        <span>© 2026 Nosso SP</span>
+    </footer>
+
+</body>
+</html>
