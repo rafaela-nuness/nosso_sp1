@@ -5,111 +5,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícia | Nosso SP</title>
+
+    <title>{{ publicacao.titulo }} | Nosso SP</title>
+
     <link rel="stylesheet" href="{% static 'css/noticia.css' %}">
+
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <header class="cabecalho">
-        <a href="/" class="logo">nosso<span>sp.</span></a>
+        <a href="{% url 'home' %}" class="logo">nosso<span>sp.</span></a>
 
         <nav class="menu">
-            <a href="/">Início</a>
-            <a href="/#noticias" class="ativo">Notícias</a>
-            <a href="/#categorias">Categorias</a>
-            <a href="/#sobre">Sobre nós</a>
+            <a href="{% url 'home' %}">Início</a>
+            <a href="{% url 'explorar' %}" class="ativo">Notícias</a>
+            <a href="{% url 'home' %}#categorias">Categorias</a>
+            <a href="{% url 'home' %}#sobre">Sobre nós</a>
         </nav>
 
-        <a href="/login/" class="botao-cabecalho">Entrar ↗</a>
+        <a href="{% url 'login' %}" class="botao-cabecalho">
+            Entrar
+        </a>
     </header>
 
     <main class="pagina-noticia">
 
-        <a href="/#noticias" class="voltar">← Voltar para as notícias</a>
+        <a href="{% url 'explorar' %}" class="voltar">
+            Voltar para as notícias
+        </a>
 
         <article>
-            <div class="cabecalho-noticia">
-                <span class="categoria">COMUNIDADE</span>
 
-                <h1>Ideias locais que aproximam as pessoas e transformam os bairros</h1>
+            <div class="cabecalho-noticia">
+
+                <span class="categoria">
+                    {{ publicacao.categoria|upper }}
+                </span>
+
+                <h1>{{ publicacao.titulo }}</h1>
 
                 <p class="resumo">
-                    Conheça iniciativas comunitárias e histórias de moradores
-                    que ajudam a construir uma cidade melhor.
+                    {{ publicacao.resumo }}
                 </p>
 
                 <div class="informacoes">
                     <div class="avatar">NS</div>
+
                     <div>
                         <p class="autor">Redação Nosso SP</p>
-                        <p class="data">25 de outubro de 2026 · 5 min de leitura</p>
+
+                        <p class="data">
+                            {{ publicacao.data_criacao|date:"d/m/Y" }}
+
+                            {% if publicacao.regiao %}
+                                · {{ publicacao.regiao }}
+                            {% endif %}
+
+                            {% if publicacao.local %}
+                                · {{ publicacao.local }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
+
             </div>
 
             <figure class="imagem-principal">
-                <img
-                    src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1600&q=85"
-                    alt="Vista urbana de uma cidade"
-                >
+
+                {% if publicacao.imagem %}
+                    <img
+                        src="{{ publicacao.imagem }}"
+                        alt="{{ publicacao.titulo }}"
+                    >
+                {% else %}
+                    <img
+                        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1600&q=85"
+                        alt="Vista urbana de São Paulo"
+                    >
+                {% endif %}
+
                 <figcaption>
-                    A vida nos bairros é feita de encontros, iniciativas e histórias.
+                    {% if publicacao.regiao %}
+                        {{ publicacao.regiao }}
+                    {% endif %}
+
+                    {% if publicacao.local %}
+                        {% if publicacao.regiao %} · {% endif %}
+                        {{ publicacao.local }}
+                    {% endif %}
+
+                    {% if not publicacao.regiao and not publicacao.local %}
+                        Uma notícia do portal Nosso SP.
+                    {% endif %}
                 </figcaption>
+
             </figure>
 
             <div class="conteudo-noticia">
-                <p class="abertura">
-                    Uma cidade é muito mais do que suas ruas e construções.
-                    Ela é formada pelas pessoas, pelas relações entre vizinhos
-                    e pelas ideias que nascem dentro das comunidades.
-                </p>
-
-                <h2>Quando a comunidade se une</h2>
-
-                <p>
-                    Em diferentes bairros, iniciativas locais podem incentivar
-                    a convivência, fortalecer os vínculos entre moradores e
-                    criar novas possibilidades para os espaços compartilhados.
-                </p>
-
-                <p>
-                    Conhecer essas experiências também é uma forma de valorizar
-                    quem participa do cotidiano da cidade e contribui para
-                    transformar a realidade ao seu redor.
-                </p>
-
-                <blockquote>
-                    As histórias locais ajudam a compreender a cidade
-                    a partir de quem vive nela.
-                </blockquote>
-
-                <h2>Dar voz a quem vive a cidade</h2>
-
-                <p>
-                    O jornalismo local aproxima a informação das pessoas.
-                    Ao registrar acontecimentos, ouvir diferentes perspectivas
-                    e divulgar iniciativas, contribui para uma comunidade
-                    mais informada e participativa.
-                </p>
-
-                <p>
-                    Esta matéria é um exemplo demonstrativo do portal Nosso SP.
-                    O conteúdo real será cadastrado pelos jornalistas quando
-                    o sistema estiver conectado ao banco de dados.
-                </p>
+                {{ publicacao.conteudo|linebreaks }}
             </div>
+
+            {% if publicacao.tags %}
+                <div class="tags-noticia">
+                    <strong>ASSUNTOS RELACIONADOS:</strong>
+                    <p>{{ publicacao.tags }}</p>
+                </div>
+            {% endif %}
+
         </article>
 
         <section class="comentarios">
+
             <div class="titulo-comentarios">
                 <p class="etiqueta">PARTICIPE DA CONVERSA</p>
                 <h2>Comentários<span>.</span></h2>
                 <p>Compartilhe sua opinião com respeito.</p>
             </div>
 
-            <form class="formulario-comentario" action="#" method="post">
+            {% if comentario_enviado %}
+                <p class="mensagem-sucesso">
+                    Seu comentário foi enviado e aguarda aprovação da equipe!
+                </p>
+            {% endif %}
+
+            {% if erro_comentario %}
+                <p class="mensagem-erro">
+                    {{ erro_comentario }}
+                </p>
+            {% endif %}
+
+            <form class="formulario-comentario" method="POST">
                 {% csrf_token %}
+
+                <label for="nome">Seu nome</label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    maxlength="100"
+                    placeholder="Digite seu nome"
+                    required
+                >
 
                 <label for="comentario">Seu comentário</label>
 
@@ -121,29 +160,70 @@
                     required
                 ></textarea>
 
+                {% if leitor_conectado %}
+                    <p class="aviso-conta">
+                        Seu comentário será associado à sua conta do Nosso SP.
+                    </p>
+                {% endif %}
+
                 <button type="submit" class="botao-comentar">
-                    Enviar comentário →
+                    Enviar comentário
                 </button>
+
             </form>
 
-            <div class="comentario-exemplo">
-                <div class="avatar avatar-claro">LM</div>
-                <div>
-                    <p class="nome-comentario">Leitor(a) demonstrativo(a)</p>
-                    <p class="texto-comentario">
-                        Os comentários reais aparecerão aqui quando a
-                        funcionalidade estiver implementada.
+            <div class="lista-comentarios">
+
+                <h3>Comentários publicados</h3>
+
+                {% for comentario in comentarios %}
+
+                    <div class="comentario-exemplo">
+
+                        <div class="avatar avatar-claro">
+                            {{ comentario.nome|first|upper }}
+                        </div>
+
+                        <div>
+                            <p class="nome-comentario">
+                                {{ comentario.nome }}
+                            </p>
+
+                            <p class="texto-comentario">
+                                {{ comentario.texto|linebreaksbr }}
+                            </p>
+
+                            <small>
+                                {{ comentario.data_criacao|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p>
+                        Seja o primeiro a comentar nesta notícia!
                     </p>
-                </div>
+
+                {% endfor %}
+
             </div>
+
         </section>
 
     </main>
 
     <footer class="rodape">
-        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <a href="{% url 'home' %}" class="logo">
+            nosso<span>sp.</span>
+        </a>
+
         <p>Informação local. Vozes reais. Uma cidade inteira.</p>
+
         <span>© 2026 Nosso SP</span>
+
     </footer>
 
 </body>

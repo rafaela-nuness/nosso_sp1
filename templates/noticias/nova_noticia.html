@@ -5,92 +5,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova notícia | Nosso SP</title>
+
+    <title>{% if publicacao %}Editar notícia{% else %}Nova notícia{% endif %} | Nosso SP</title>
+
     <link rel="stylesheet" href="{% static 'css/nova_noticia.css' %}">
+
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
     <header class="topbar">
         <a href="/" class="logo">nosso<span>sp.</span></a>
+
         <nav>
             <a href="/">Início</a>
-            <a href="/painel/">Painel</a>
-            <a href="/noticia/">Notícias</a>
-            <a href="/login/" class="logout">Sair ↗</a>
+
+            {% if request.session.usuario_tipo == "administrador" %}
+                <a href="{% url 'administracao' %}">Painel</a>
+            {% else %}
+                <a href="{% url 'painel' %}">Painel</a>
+            {% endif %}
+
+            <a href="{% url 'explorar' %}">Notícias</a>
+
+            {% if request.session.usuario_tipo %}
+                <a href="{% url 'logout' %}" class="logout">Sair ↗</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="logout">Entrar ↗</a>
+            {% endif %}
         </nav>
     </header>
 
     <main class="container">
-        <a href="/painel/" class="back-link">← Voltar ao painel</a>
+
+        {% if request.session.usuario_tipo == "administrador" %}
+            <a href="{% url 'administracao' %}" class="back-link">← Voltar ao painel</a>
+        {% else %}
+            <a href="{% url 'painel' %}" class="back-link">← Voltar ao painel</a>
+        {% endif %}
 
         <section class="intro">
             <p class="eyebrow">REDAÇÃO · NOSSO SP</p>
-            <h1>Uma nova história<br>começa aqui<span>.</span></h1>
+
+            <h1>
+                {% if publicacao %}
+                    Edite sua história<span>.</span>
+                {% else %}
+                    Uma nova história<br>começa aqui<span>.</span>
+                {% endif %}
+            </h1>
+
             <p>Compartilhe o que acontece na sua comunidade.</p>
         </section>
 
         <div class="editor-layout">
-            <form class="editor-form" onsubmit="event.preventDefault(); alert('A publicação será conectada ao sistema na próxima etapa!');">
+
+            <form class="editor-form" method="POST">
+                {% csrf_token %}
+
                 <label for="titulo">Título da notícia</label>
-                <input id="titulo" type="text" placeholder="Escreva um título que chame a atenção..." required>
+                <input
+                    id="titulo"
+                    name="titulo"
+                    type="text"
+                    placeholder="Escreva um título que chame a atenção..."
+                    value="{{ publicacao.titulo|default:'' }}"
+                    maxlength="200"
+                    required
+                >
 
                 <label for="resumo">Resumo</label>
-                <textarea id="resumo" rows="3" placeholder="Conte em poucas palavras o que aconteceu..." required></textarea>
+                <textarea
+                    id="resumo"
+                    name="resumo"
+                    rows="3"
+                    placeholder="Conte em poucas palavras o que aconteceu..."
+                    required
+                >{{ publicacao.resumo|default:'' }}</textarea>
 
                 <div class="form-row">
+
                     <div>
                         <label for="categoria">Categoria</label>
-                        <select id="categoria" required>
+
+                        <select id="categoria" name="categoria" required>
                             <option value="">Escolha uma categoria</option>
-                            <option>Cidade</option>
-                            <option>Política</option>
-                            <option>Cultura</option>
-                            <option>Esportes</option>
-                            <option>Educação</option>
-                            <option>Meio ambiente</option>
-                            <option>Segurança</option>
+
+                            <option value="Cidade" {% if publicacao.categoria == "Cidade" %}selected{% endif %}>Cidade</option>
+
+                            <option value="Política" {% if publicacao.categoria == "Política" %}selected{% endif %}>Política</option>
+
+                            <option value="Cultura" {% if publicacao.categoria == "Cultura" %}selected{% endif %}>Cultura</option>
+
+                            <option value="Esportes" {% if publicacao.categoria == "Esportes" %}selected{% endif %}>Esportes</option>
+
+                            <option value="Educação" {% if publicacao.categoria == "Educação" %}selected{% endif %}>Educação</option>
+
+                            <option value="Meio ambiente" {% if publicacao.categoria == "Meio ambiente" %}selected{% endif %}>Meio ambiente</option>
+
+                            <option value="Segurança" {% if publicacao.categoria == "Segurança" %}selected{% endif %}>Segurança</option>
                         </select>
                     </div>
+
                     <div>
-                        <label for="local">Local da notícia</label>
-                        <input id="local" type="text" placeholder="Ex.: Itaquera, São Paulo">
+                        <label for="local">Bairro / Local da notícia</label>
+
+                        <input
+                            id="local"
+                            name="local"
+                            type="text"
+                            placeholder="Ex.: Itaquera"
+                            value="{{ publicacao.local|default:'' }}"
+                        >
                     </div>
+
                 </div>
+
+                <label for="regiao">Região de São Paulo</label>
+
+                <select id="regiao" name="regiao" required>
+                    <option value="">Selecione a região</option>
+
+                    {% for valor, nome in regioes %}
+                        <option
+                            value="{{ valor }}"
+                            {% if publicacao.regiao == valor %}selected{% endif %}
+                        >
+                            {{ nome }}
+                        </option>
+                    {% endfor %}
+
+                </select>
 
                 <label for="imagem">Imagem de capa</label>
-                <input id="imagem" type="url" placeholder="Cole o endereço de uma imagem (URL)">
+
+                <input
+                    id="imagem"
+                    name="imagem"
+                    type="url"
+                    placeholder="Cole o endereço de uma imagem (URL)"
+                    value="{{ publicacao.imagem|default:'' }}"
+                >
 
                 <label for="conteudo">Conteúdo da notícia</label>
-                <textarea id="conteudo" rows="10" placeholder="Desenvolva a notícia com os detalhes, informações e contexto..." required></textarea>
+
+                <textarea
+                    id="conteudo"
+                    name="conteudo"
+                    rows="10"
+                    placeholder="Desenvolva a notícia com os detalhes, informações e contexto..."
+                    required
+                >{{ publicacao.conteudo|default:'' }}</textarea>
 
                 <label for="tags">Palavras-chave</label>
-                <input id="tags" type="text" placeholder="Ex.: comunidade, mobilidade, bairro">
+
+                <input
+                    id="tags"
+                    name="tags"
+                    type="text"
+                    placeholder="Ex.: comunidade, mobilidade, bairro"
+                    value="{{ publicacao.tags|default:'' }}"
+                >
+
+                <label for="status">Situação da notícia</label>
+
+                <select id="status" name="status" required>
+
+                    <option
+                        value="rascunho"
+                        {% if not publicacao or publicacao.status == "rascunho" %}selected{% endif %}
+                    >
+                        Salvar como rascunho
+                    </option>
+
+                    <option
+                        value="publicado"
+                        {% if publicacao.status == "publicado" %}selected{% endif %}
+                    >
+                        Publicar notícia
+                    </option>
+
+                </select>
 
                 <div class="form-actions">
-                    <button type="reset" class="secondary-button">Limpar formulário</button>
-                    <button type="submit" class="primary-button">Publicar notícia ↗</button>
+
+                    <button type="reset" class="secondary-button">
+                        Limpar formulário
+                    </button>
+
+                    <button type="submit" class="primary-button">
+                        {% if publicacao %}
+                            Salvar alterações ↗
+                        {% else %}
+                            Salvar notícia ↗
+                        {% endif %}
+                    </button>
+
                 </div>
+
             </form>
 
             <aside class="side-note">
+
                 <div class="note-icon">✳</div>
+
                 <p class="eyebrow">ANTES DE PUBLICAR</p>
+
                 <h2>Jornalismo próximo das pessoas.</h2>
-                <p>Confira as informações, revise o texto e indique corretamente onde a notícia aconteceu.</p>
+
+                <p>
+                    Confira as informações, revise o texto e indique
+                    corretamente onde a notícia aconteceu.
+                </p>
+
                 <div class="tip">
                     <strong>01 — Seja claro</strong>
                     <span>Prefira títulos objetivos e informativos.</span>
                 </div>
+
                 <div class="tip">
                     <strong>02 — Confira os fatos</strong>
                     <span>Verifique nomes, datas e informações.</span>
                 </div>
+
                 <div class="tip">
                     <strong>03 — Valorize o território</strong>
-                    <span>Informe o bairro ou município relacionado.</span>
+                    <span>Informe o bairro e a região relacionados.</span>
                 </div>
+
             </aside>
+
         </div>
+
     </main>
+
 </body>
 </html>

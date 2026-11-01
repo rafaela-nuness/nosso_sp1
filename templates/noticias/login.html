@@ -47,7 +47,7 @@
                     Informe seus dados para continuar.
                 </p>
 
-                <form action="#" method="post">
+                <form action="{% url 'login' %}" method="post">
                     {% csrf_token %}
 
                     <div class="campo">
@@ -74,15 +74,17 @@
                         >
                     </div>
 
+                    {% if erro %}
+                        <p style="color: #c0392b; font-size: 13px; margin-bottom: 15px;">
+                            {{ erro }}
+                        </p>
+                    {% endif %}
+
                     <button type="submit" class="botao-entrar">
                         Entrar na conta <span>→</span>
                     </button>
                 </form>
 
-                <p class="aviso">
-                    Esta tela é uma versão visual. O login ainda será
-                    conectado ao sistema de autenticação do Django.
-                </p>
             </div>
 
         </section>

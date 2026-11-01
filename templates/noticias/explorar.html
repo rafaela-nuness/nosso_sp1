@@ -26,11 +26,11 @@
 
         <nav class="navigation" id="navigation">
             <a href="/">Início</a>
-            <a href="/explorar/" class="active">Explorar</a>
+            <a href="{% url 'explorar' %}" class="active">Explorar</a>
             <a href="/#sobre">Sobre nós</a>
         </nav>
 
-        <a href="/login/" class="header-button">
+        <a href="{% url 'login' %}" class="header-button">
             Área do jornalista <span>↗</span>
         </a>
 
@@ -80,7 +80,7 @@
 
             <div class="search-note">
                 <span>ENCONTRE SUA PRÓXIMA LEITURA</span>
-                <span id="resultsCount">6 HISTÓRIAS</span>
+                <span id="resultsCount">{{ publicacoes|length }} HISTÓRIAS</span>
             </div>
         </section>
 
@@ -96,20 +96,33 @@
                 <button type="button" class="filter-chip selected" data-category="Todas">
                     Todas as notícias <span>✳</span>
                 </button>
-                <button type="button" class="filter-chip" data-category="Cotidiano">
-                    Cotidiano
+
+                <button type="button" class="filter-chip" data-category="Cidade">
+                    Cidade
                 </button>
+
+                <button type="button" class="filter-chip" data-category="Política">
+                    Política
+                </button>
+
                 <button type="button" class="filter-chip" data-category="Cultura">
                     Cultura
                 </button>
-                <button type="button" class="filter-chip" data-category="Comunidade">
-                    Comunidade
+
+                <button type="button" class="filter-chip" data-category="Esportes">
+                    Esportes
                 </button>
-                <button type="button" class="filter-chip" data-category="Mobilidade">
-                    Mobilidade
+
+                <button type="button" class="filter-chip" data-category="Educação">
+                    Educação
                 </button>
-                <button type="button" class="filter-chip" data-category="Economia">
-                    Economia
+
+                <button type="button" class="filter-chip" data-category="Meio ambiente">
+                    Meio ambiente
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Segurança">
+                    Segurança
                 </button>
             </div>
 
@@ -145,125 +158,59 @@
 
             <div class="stories-grid" id="storiesGrid">
 
-                <article class="story-card story-featured"
-                    data-category="Cotidiano"
-                    data-region="Centro"
-                    data-date="2026-10-26"
-                    data-title="A cidade vista por quem vive nela todos os dias">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=85"
-                             alt="Paisagem urbana de uma grande cidade">
-                        <span class="story-category">COTIDIANO</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>REPORTAGEM ESPECIAL</span>
-                        <span>01 / DESTAQUE</span>
-                    </div>
-                    <h3><a href="/noticia/">A cidade vista por quem vive nela todos os dias</a></h3>
-                    <p>Os detalhes, as mudanças e as pessoas que constroem a vida urbana.</p>
-                    <span class="story-location">⌖ CENTRO</span>
-                </article>
+                {% for publicacao in publicacoes %}
 
-                <article class="story-card"
-                    data-category="Economia"
-                    data-region="Zona Leste"
-                    data-date="2026-10-25"
-                    data-title="O comércio de bairro e as histórias por trás das portas">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=85"
-                             alt="Vitrines e comércio de rua">
-                        <span class="story-category">ECONOMIA</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>VIDA LOCAL</span>
-                        <span>02 / BAIRROS</span>
-                    </div>
-                    <h3><a href="/noticia/">O comércio de bairro e as histórias por trás das portas</a></h3>
-                    <p>As pessoas e os pequenos negócios que movimentam a economia local.</p>
-                    <span class="story-location">⌖ ZONA LESTE</span>
-                </article>
+                    <article
+                        class="story-card {% if forloop.first %}story-featured{% endif %}"
+                        data-category="{{ publicacao.categoria }}"
+                        data-region="{{ publicacao.regiao }}"
+                        data-date="{{ publicacao.data_criacao|date:'Y-m-d H:i:s' }}"
+                        data-title="{{ publicacao.titulo }}"
+                    >
+                        <a href="/noticia/?id={{ publicacao.id }}" class="story-image">
 
-                <article class="story-card"
-                    data-category="Cultura"
-                    data-region="Zona Sul"
-                    data-date="2026-10-24"
-                    data-title="Os espaços que tornam a cidade mais viva">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=900&q=85"
-                             alt="Área verde e espaços de convivência">
-                        <span class="story-category">CULTURA</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>ESPAÇOS PÚBLICOS</span>
-                        <span>03 / CIDADE</span>
-                    </div>
-                    <h3><a href="/noticia/">Os espaços que tornam a cidade mais viva</a></h3>
-                    <p>Parques, praças e lugares que aproximam pessoas e comunidades.</p>
-                    <span class="story-location">⌖ ZONA SUL</span>
-                </article>
+                            {% if publicacao.imagem %}
+                                <img
+                                    src="{{ publicacao.imagem }}"
+                                    alt="{{ publicacao.titulo }}"
+                                >
+                            {% else %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=85"
+                                    alt="Paisagem urbana de São Paulo"
+                                >
+                            {% endif %}
 
-                <article class="story-card"
-                    data-category="Mobilidade"
-                    data-region="Zona Norte"
-                    data-date="2026-10-23"
-                    data-title="Os caminhos que conectam diferentes partes de São Paulo">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=85"
-                             alt="Vista urbana ao entardecer">
-                        <span class="story-category">MOBILIDADE</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>DESLOCAMENTO</span>
-                        <span>04 / CIDADE</span>
-                    </div>
-                    <h3><a href="/noticia/">Os caminhos que conectam diferentes partes de São Paulo</a></h3>
-                    <p>Como a mobilidade faz parte da rotina de quem vive na metrópole.</p>
-                    <span class="story-location">⌖ ZONA NORTE</span>
-                </article>
+                            <span class="story-category">{{ publicacao.categoria }}</span>
+                            <span class="story-arrow">↗</span>
+                        </a>
 
-                <article class="story-card"
-                    data-category="Comunidade"
-                    data-region="Zona Oeste"
-                    data-date="2026-10-22"
-                    data-title="Quando a comunidade se une, novas histórias começam">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=85"
-                             alt="Pessoas reunidas em um momento de convivência">
-                        <span class="story-category">COMUNIDADE</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>GENTE DAQUI</span>
-                        <span>05 / PESSOAS</span>
-                    </div>
-                    <h3><a href="/noticia/">Quando a comunidade se une, novas histórias começam</a></h3>
-                    <p>Iniciativas locais que fortalecem os vínculos entre moradores.</p>
-                    <span class="story-location">⌖ ZONA OESTE</span>
-                </article>
+                        <div class="story-meta">
+                            <span>
+                                {{ publicacao.regiao|default:"SÃO PAULO" }}
+                                {% if publicacao.local %} · {{ publicacao.local }}{% endif %}
+                            </span>
+                            <span>{{ publicacao.data_criacao|date:"d/m/Y" }}</span>
+                        </div>
 
-                <article class="story-card"
-                    data-category="Cotidiano"
-                    data-region="Centro"
-                    data-date="2026-10-21"
-                    data-title="Pequenos detalhes que contam grandes histórias da cidade">
-                    <a href="/noticia/" class="story-image">
-                        <img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=85"
-                             alt="Cenário urbano da cidade">
-                        <span class="story-category">COTIDIANO</span>
-                        <span class="story-arrow">↗</span>
-                    </a>
-                    <div class="story-meta">
-                        <span>OLHAR LOCAL</span>
-                        <span>06 / CIDADE</span>
-                    </div>
-                    <h3><a href="/noticia/">Pequenos detalhes que contam grandes histórias da cidade</a></h3>
-                    <p>Um novo olhar para aquilo que muitas vezes passa despercebido.</p>
-                    <span class="story-location">⌖ CENTRO</span>
-                </article>
+                        <h3>
+                            <a href="/noticia/?id={{ publicacao.id }}">
+                                {{ publicacao.titulo }}
+                            </a>
+                        </h3>
+
+                        <p>{{ publicacao.resumo }}</p>
+
+                        <span class="story-location">
+                            ⌖ {{ publicacao.local|default:"SÃO PAULO" }}
+                        </span>
+                    </article>
+
+                {% empty %}
+
+                    <p>Nenhuma notícia publicada ainda. Volte em breve!</p>
+
+                {% endfor %}
 
             </div>
 
@@ -284,7 +231,7 @@
             <span class="section-kicker">SUA CIDADE. SUA VOZ.</span>
             <h2>Tem uma história?<br><em>Ela merece ser contada.</em></h2>
             <p>O Nosso SP quer aproximar as pessoas das histórias que transformam seus bairros.</p>
-            <a href="/login/" class="cta-button">Faça parte do Nosso SP ↗</a>
+            <a href="{% url 'login' %}" class="cta-button">Faça parte do Nosso SP ↗</a>
         </section>
     </main>
 
@@ -305,7 +252,10 @@
         const resultsCount = document.getElementById("resultsCount");
         const emptyState = document.getElementById("emptyState");
 
-        let selectedCategory = "Todas";
+        const params = new URLSearchParams(window.location.search);
+        const categoriaInicial = params.get("categoria");
+
+        let selectedCategory = categoriaInicial || "Todas";
 
         function normalizeText(text) {
             return text
@@ -317,7 +267,9 @@
         function filterStories() {
             const query = normalizeText(searchInput.value.trim());
             const region = regionFilter.value;
-            const cards = Array.from(storiesGrid.querySelectorAll(".story-card"));
+            const cards = Array.from(
+                storiesGrid.querySelectorAll(".story-card")
+            );
 
             cards.forEach(function (card) {
                 const title = card.dataset.title || "";
@@ -326,15 +278,18 @@
                 const content = card.innerText || "";
 
                 const matchesQuery = !query ||
-                    normalizeText(title + " " + category + " " + content).includes(query);
+                    normalizeText(title + " " + category + " " + content)
+                    .includes(query);
 
                 const matchesCategory = selectedCategory === "Todas" ||
-                    category === selectedCategory;
+                    normalizeText(category) === normalizeText(selectedCategory);
 
                 const matchesRegion = region === "Todas" ||
                     cardRegion === region;
 
-                card.hidden = !(matchesQuery && matchesCategory && matchesRegion);
+                card.hidden = !(
+                    matchesQuery && matchesCategory && matchesRegion
+                );
             });
 
             const visibleCards = cards.filter(function (card) {
@@ -345,13 +300,18 @@
 
             visibleCards.sort(function (a, b) {
                 if (sort === "titulo") {
-                    return a.dataset.title.localeCompare(b.dataset.title, "pt-BR");
+                    return a.dataset.title.localeCompare(
+                        b.dataset.title,
+                        "pt-BR"
+                    );
                 }
 
-                const dateA = new Date(a.dataset.date);
-                const dateB = new Date(b.dataset.date);
+                const dateA = new Date(a.dataset.date.replace(" ", "T"));
+                const dateB = new Date(b.dataset.date.replace(" ", "T"));
 
-                return sort === "antigos" ? dateA - dateB : dateB - dateA;
+                return sort === "antigos"
+                    ? dateA - dateB
+                    : dateB - dateA;
             });
 
             visibleCards.forEach(function (card) {
@@ -359,9 +319,8 @@
             });
 
             resultsCount.textContent =
-                visibleCards.length + (visibleCards.length === 1
-                    ? " HISTÓRIA"
-                    : " HISTÓRIAS");
+                visibleCards.length +
+                (visibleCards.length === 1 ? " HISTÓRIA" : " HISTÓRIAS");
 
             emptyState.hidden = visibleCards.length !== 0;
         }
@@ -369,6 +328,7 @@
         searchForm.addEventListener("submit", function (event) {
             event.preventDefault();
             filterStories();
+
             document.getElementById("resultados").scrollIntoView({
                 behavior: "smooth",
                 block: "start"
@@ -398,7 +358,10 @@
             selectedCategory = "Todas";
 
             categoryFilters.querySelectorAll(".filter-chip").forEach(function (chip) {
-                chip.classList.toggle("selected", chip.dataset.category === "Todas");
+                chip.classList.toggle(
+                    "selected",
+                    chip.dataset.category === "Todas"
+                );
             });
 
             filterStories();
@@ -424,6 +387,61 @@
                 navigation.classList.remove("navigation-open");
             });
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const chips = categoryFilters.querySelectorAll(".filter-chip");
+
+const categoriaExiste = Array.from(chips).some(function (chip) {
+    return chip.dataset.category === selectedCategory;
+});
+
+if (!categoriaExiste) {
+    selectedCategory = "Todas";
+}
+
+chips.forEach(function (chip) {
+    chip.classList.toggle(
+        "selected",
+        chip.dataset.category === selectedCategory
+    );
+});
 
         filterStories();
     </script>

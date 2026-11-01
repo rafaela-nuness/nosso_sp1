@@ -5,135 +5,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do jornalista | Nosso SP</title>
+    <title>{% if usuario_tipo == "administrador" %}Administração{% else %}Redação{% endif %} | Nosso SP</title>
     <link rel="stylesheet" href="{% static 'css/painel.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <aside class="sidebar">
         <a href="/" class="logo">nosso<span>sp.</span></a>
 
-        <p class="menu-label">MENU PRINCIPAL</p>
+        <div class="sidebar-divider"></div>
+
+        {% if usuario_tipo == "administrador" %}
+            <p class="menu-label">ADMINISTRAÇÃO</p>
+        {% else %}
+            <p class="menu-label">SUA REDAÇÃO</p>
+        {% endif %}
 
         <nav class="menu">
-            <a href="/painel/" class="menu-item active">▦ &nbsp; Visão geral</a>
-            <a href="/#ultimas" class="menu-item">▤ &nbsp; Notícias</a>
-            <a href="/login/" class="menu-item">↪ &nbsp; Sair</a>
+
+            {% if usuario_tipo == "administrador" %}
+                <a href="{% url 'administracao' %}" class="menu-item active">
+                    <span>01</span> Início
+                </a>
+            {% else %}
+                <a href="{% url 'painel' %}" class="menu-item active">
+                    <span>01</span> Início
+                </a>
+            {% endif %}
+
+            <a href="#publicacoes" class="menu-item">
+                <span>02</span>
+                {% if usuario_tipo == "administrador" %}
+                    Todas as publicações
+                {% else %}
+                    Minhas publicações
+                {% endif %}
+            </a>
+
+            <a href="{% url 'nova_noticia' %}" class="menu-item">
+                <span>03</span> Escrever notícia
+            </a>
+
+            {% if usuario_tipo == "administrador" %}
+                <a href="{% url 'comentarios' %}" class="menu-item">
+                    <span>04</span> Comentários
+                </a>
+
+                <a href="{% url 'administracao' %}" class="menu-item">
+                    <span>05</span> Administração
+                </a>
+            {% else %}
+                <a href="{% url 'explorar' %}" class="menu-item">
+                    <span>04</span> Explorar portal
+                </a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span>↗</span> Sair da redação
+            </a>
         </nav>
 
         <div class="sidebar-bottom">
             <span class="status-dot"></span>
-            <span>Portal de notícias</span>
+            <div>
+                <strong>Nosso SP</strong>
+                <span>Jornalismo independente</span>
+            </div>
         </div>
     </aside>
 
     <main class="main-content">
 
         <header class="topbar">
-            <div>
-                <p class="eyebrow">ÁREA DO JORNALISTA</p>
-                <h1>Painel de controle</h1>
+            <div class="breadcrumb">
+                <a href="/">NOSSO SP</a>
+                <span>/</span>
+
+                {% if usuario_tipo == "administrador" %}
+                    <span>ADMINISTRAÇÃO</span>
+                {% else %}
+                    <span>REDAÇÃO</span>
+                {% endif %}
             </div>
 
             <div class="user-info">
-                <div class="user-avatar">JS</div>
-                <div>
-                    <strong>João Silva</strong>
-                    <span>Jornalista</span>
+                <div class="user-avatar">
+                    {% if usuario_tipo == "administrador" %}AD{% else %}JS{% endif %}
+                </div>
+
+                <div class="user-details">
+                    {% if usuario_tipo == "administrador" %}
+                        <strong>Administrador</strong>
+                        <span>Gestão do portal</span>
+                    {% else %}
+                        <strong>João Silva</strong>
+                        <span>Jornalista</span>
+                    {% endif %}
                 </div>
             </div>
         </header>
 
-        <section class="welcome">
-            <div>
-                <p class="eyebrow">NOSSO SP · REDAÇÃO</p>
-                <h2>Suas histórias merecem ser contadas.</h2>
-                <p>Organize suas publicações e acompanhe as notícias do portal.</p>
+        <section class="intro">
+            <div class="intro-content">
+
+                {% if usuario_tipo == "administrador" %}
+                    <p class="eyebrow">CENTRAL ADMINISTRATIVA · NOSSO SP</p>
+
+                    <h1>
+                        Informação, organização
+                        <em>e gestão da comunidade.</em>
+                    </h1>
+
+                    <p class="intro-description">
+                        Gerencie as publicações, acompanhe a produção
+                        editorial e mantenha o portal organizado.
+                    </p>
+
+                    <a href="{% url 'administracao' %}" class="primary-button">
+                        <span>＋</span> Acessar administração
+                        <span class="button-arrow">→</span>
+                    </a>
+
+                {% else %}
+                    <p class="eyebrow">ESPAÇO DO JORNALISTA · NOSSO SP</p>
+
+                    <h1>
+                        Toda cidade tem uma história.
+                        <em>Qual será a sua próxima?</em>
+                    </h1>
+
+                    <p class="intro-description">
+                        Acompanhe suas publicações, descubra o que acontece
+                        na cidade e dê voz às histórias da nossa comunidade.
+                    </p>
+
+                    <a href="{% url 'nova_noticia' %}" class="primary-button">
+                        <span>＋</span> Escrever uma notícia
+                        <span class="button-arrow">→</span>
+                    </a>
+                {% endif %}
+
             </div>
 
-            <a href="/nova-noticia/" class="primary-button">＋ Nova notícia</a>
+            <div class="intro-decoration">
+                <span class="decoration-number">01</span>
+                <span class="decoration-text">INFORMAÇÃO LOCAL.<br>VOZES REAIS.</span>
+                <span class="decoration-line"></span>
+            </div>
+        </section>
+
+        <section class="welcome-message">
+            <div>
+                <p class="eyebrow">BEM-VINDO DE VOLTA</p>
+
+                {% if usuario_tipo == "administrador" %}
+                    <h2>Olá, administrador. Bem-vindo ao painel.</h2>
+                {% else %}
+                    <h2>Olá, João. Bom ter você por aqui.</h2>
+                {% endif %}
+            </div>
+
+            <p>
+                {% if usuario_tipo == "administrador" %}
+                    Acompanhe as atividades e contribua para a organização
+                    do Nosso SP.
+                {% else %}
+                    Cada publicação é uma oportunidade de aproximar
+                    a comunidade da informação.
+                {% endif %}
+            </p>
         </section>
 
         <section class="stats">
             <article class="stat-card">
-                <span class="stat-icon">▤</span>
-                <p>Minhas notícias</p>
-                <strong>12</strong>
-                <span class="stat-description">Publicações cadastradas</span>
+                <span class="stat-label">PUBLICAÇÕES</span>
+                <strong>{{ total_publicacoes|stringformat:"02d" }}</strong>
+                <span class="stat-description">Notícias cadastradas</span>
             </article>
 
             <article class="stat-card">
-                <span class="stat-icon">◷</span>
-                <p>Rascunhos</p>
-                <strong>03</strong>
-                <span class="stat-description">Aguardando publicação</span>
+                <span class="stat-label">EM PRODUÇÃO</span>
+                <strong>{{ total_rascunhos|stringformat:"02d" }}</strong>
+                <span class="stat-description">Rascunhos salvos</span>
             </article>
 
             <article class="stat-card">
-                <span class="stat-icon">◉</span>
-                <p>Comentários</p>
-                <strong>28</strong>
-                <span class="stat-description">Nas suas publicações</span>
+                <span class="stat-label">
+                    {% if usuario_tipo == "administrador" %}
+                        GESTÃO
+                    {% else %}
+                        PARTICIPAÇÃO
+                    {% endif %}
+                </span>
+
+                {% if usuario_tipo == "administrador" %}
+                    <strong>ADM</strong>
+                    <span class="stat-description">Acesso administrativo</span>
+                {% else %}
+                    <strong>00</strong>
+                    <span class="stat-description">Comentários recebidos</span>
+                {% endif %}
             </article>
         </section>
 
-        <section class="news-section" id="noticias">
+        <section class="publications" id="publicacoes">
+
             <div class="section-heading">
                 <div>
-                    <p class="eyebrow">ACOMPANHAMENTO</p>
-                    <h2>Notícias recentes</h2>
+                    <p class="eyebrow">
+                        {% if usuario_tipo == "administrador" %}
+                            GESTÃO EDITORIAL
+                        {% else %}
+                            ACERVO PESSOAL
+                        {% endif %}
+                    </p>
+
+                    <h2>
+                        {% if usuario_tipo == "administrador" %}
+                            Publicações do portal.
+                        {% else %}
+                            Da sua redação.
+                        {% endif %}
+                    </h2>
+
+                    <p class="section-description">
+                        {% if usuario_tipo == "administrador" %}
+                            Acompanhe e gerencie as notícias cadastradas.
+                        {% else %}
+                            Acompanhe as histórias que você está construindo.
+                        {% endif %}
+                    </p>
                 </div>
 
-                <a href="/#ultimas" class="text-link">Ver notícias →</a>
+                <a href="{% url 'nova_noticia' %}" class="text-link">
+                    Nova publicação →
+                </a>
             </div>
 
-            <div class="news-table">
-                <div class="table-header">
-                    <span>TÍTULO</span>
-                    <span>CATEGORIA</span>
-                    <span>STATUS</span>
-                    <span>DATA</span>
-                </div>
+            <div class="publication-list">
 
-                <div class="news-row">
-                    <div class="news-title">
-                        <strong>Novas iniciativas transformam bairros de São Paulo</strong>
-                        <span>Por João Silva</span>
-                    </div>
-                    <span class="category">Cidade</span>
-                    <span class="status published">Publicado</span>
-                    <span class="date">24 out. 2026</span>
-                </div>
+                {% for publicacao in publicacoes %}
+                    <article class="publication-item">
 
-                <div class="news-row">
-                    <div class="news-title">
-                        <strong>Projeto cultural abre espaço para artistas locais</strong>
-                        <span>Por João Silva</span>
-                    </div>
-                    <span class="category">Cultura</span>
-                    <span class="status draft">Rascunho</span>
-                    <span class="date">22 out. 2026</span>
-                </div>
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
 
-                <div class="news-row">
-                    <div class="news-title">
-                        <strong>Comunidade organiza ação de sustentabilidade</strong>
-                        <span>Por João Silva</span>
-                    </div>
-                    <span class="category">Ambiente</span>
-                    <span class="status published">Publicado</span>
-                    <span class="date">20 out. 2026</span>
-                </div>
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <span class="publication-date">
+                                {{ publicacao.data_criacao|date:"d \d\e F \d\e Y" }}
+
+                                {% if usuario_tipo == "administrador" %}
+                                    · Gestão do portal
+                                {% else %}
+                                    · Por João Silva
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <span class="publication-status {% if publicacao.status == 'publicado' %}published{% else %}draft{% endif %}">
+                            {% if publicacao.status == "publicado" %}
+                                Publicado
+                            {% else %}
+                                Rascunho
+                            {% endif %}
+                        </span>
+
+                        <div class="publication-actions">
+
+                            {% if publicacao.status == "publicado" %}
+                                <a href="/noticia/?id={{ publicacao.id }}"
+                                   class="publication-arrow"
+                                   title="Visualizar notícia">↗</a>
+                            {% endif %}
+
+                            {% if usuario_tipo == "administrador" %}
+                                <a href="{% url 'editar_noticia' publicacao.id %}"
+                                   class="publication-edit"
+                                   title="Editar notícia">✎</a>
+
+                                <form
+                                    action="{% url 'excluir_noticia' publicacao.id %}"
+                                    method="POST"
+                                    onsubmit="return confirm('Tem certeza de que deseja excluir esta notícia?');"
+                                >
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="publication-delete"
+                                        title="Excluir notícia"
+                                    >✕</button>
+                                </form>
+                            {% endif %}
+
+                        </div>
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Ainda não existem notícias cadastradas.
+                    </p>
+                {% endfor %}
+
             </div>
-
-            <p class="demo-note">
-                Dados ilustrativos — as informações reais serão conectadas ao banco de dados posteriormente.
-            </p>
         </section>
 
+        {% if usuario_tipo == "administrador" %}
+            <section class="editorial-cta">
+                <div>
+                    <p class="eyebrow">PARTICIPAÇÃO DA COMUNIDADE</p>
+                    <h2>
+                        Acompanhe os comentários
+                        e mantenha o diálogo ativo.
+                    </h2>
+                </div>
+
+                <a href="{% url 'comentarios' %}" class="cta-link">
+                    Moderar comentários <span>→</span>
+                </a>
+            </section>
+        {% else %}
+            <section class="editorial-cta">
+                <div>
+                    <p class="eyebrow">UMA CIDADE INTEIRA TEM VOZ</p>
+                    <h2>
+                        As próximas grandes histórias
+                        podem começar no seu bairro.
+                    </h2>
+                </div>
+
+                <a href="{% url 'nova_noticia' %}" class="cta-link">
+                    Começar uma pauta <span>→</span>
+                </a>
+            </section>
+        {% endif %}
+
         <footer class="footer">
-            <a href="/" class="footer-home">← Voltar à página inicial</a>
+            <a href="/" class="footer-logo">
+                nosso<span>sp.</span>
+            </a>
+
             <span>© 2026 Nosso SP</span>
             <span>Jornalismo feito por e para a comunidade.</span>
         </footer>

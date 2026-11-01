@@ -1,0 +1,974 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Leitor | Nosso SP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #F3EBDD;
+            --paper: #FBF8F1;
+            --terracotta: #C65D3A;
+            --olive: #343D2E;
+            --amber: #E4B85E;
+            --charcoal: #262722;
+            --muted: #77766D;
+            --line: #E5DED1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--paper);
+            color: var(--charcoal);
+            font-family: 'Manrope', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* MENU LATERAL */
+
+        .sidebar {
+            width: 255px;
+            min-height: 100vh;
+            background: var(--olive);
+            color: var(--cream);
+            padding: 34px 22px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            padding: 0 12px 42px;
+            border-bottom: 1px solid rgba(243, 235, 221, 0.18);
+        }
+
+        .brand-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .brand-name span {
+            color: var(--amber);
+        }
+
+        .brand-subtitle {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: .65;
+            margin-top: 3px;
+        }
+
+        .menu-label {
+            color: #B9B9A9;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 30px 12px 13px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #E8E7DB;
+            transition: .2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: rgba(243, 235, 221, .13);
+            color: var(--amber);
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(243, 235, 221, .18);
+        }
+
+        .reader-mini {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px;
+            margin-bottom: 14px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--amber);
+            color: var(--olive);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+        }
+
+        .reader-mini strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .reader-mini small {
+            font-size: 10px;
+            color: #C6C8B9;
+        }
+
+        .logout {
+            display: block;
+            padding: 12px 14px;
+            color: #E7B09C;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 8px;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,.08);
+        }
+
+        /* CONTEÚDO */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px 5%;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .breadcrumb strong {
+            color: var(--charcoal);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .reader-label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .top-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--terracotta);
+            color: white;
+            font-weight: 800;
+        }
+
+        /* BOAS-VINDAS */
+
+        .welcome {
+            margin: 36px 0 32px;
+            padding: 35px 40px;
+            border-radius: 13px;
+            background: var(--cream);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome::after {
+            content: "SP";
+            position: absolute;
+            right: 35px;
+            bottom: -62px;
+            font-family: 'DM Serif Display', serif;
+            font-size: 190px;
+            color: rgba(198, 93, 58, .09);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            color: var(--terracotta);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .welcome h1 {
+            max-width: 600px;
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(30px, 4vw, 43px);
+            line-height: 1.12;
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .welcome h1 span {
+            color: var(--terracotta);
+        }
+
+        .welcome p {
+            color: #66665C;
+            font-size: 13px;
+            line-height: 1.8;
+            max-width: 500px;
+        }
+
+        /* CATEGORIAS E SEÇÕES */
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 19px;
+        }
+
+        .section-heading h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 27px;
+            font-weight: 400;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-bottom: 38px;
+        }
+
+        .category {
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            padding: 9px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #5D5D53;
+            transition: .2s;
+        }
+
+        .category:hover {
+            background: var(--olive);
+            color: var(--cream);
+            border-color: var(--olive);
+        }
+
+        .news-section {
+            padding-bottom: 42px;
+            scroll-margin-top: 25px;
+        }
+
+        .see-all {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--terracotta);
+        }
+
+        /* CARDS */
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 19px;
+        }
+
+        .news-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(38, 39, 34, .08);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 175px;
+            object-fit: cover;
+            display: block;
+            background: var(--cream);
+        }
+
+        .image-placeholder {
+            height: 175px;
+            display: grid;
+            place-items: center;
+            background: var(--cream);
+            color: var(--terracotta);
+            font-family: 'DM Serif Display', serif;
+            font-size: 32px;
+        }
+
+        .news-content {
+            padding: 19px;
+        }
+
+        .news-category {
+            color: var(--terracotta);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .news-content h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 21px;
+            font-weight: 400;
+            line-height: 1.25;
+            margin: 10px 0;
+        }
+
+        .news-content p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 17px;
+        }
+
+        .news-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-top: 1px solid var(--line);
+            padding-top: 13px;
+        }
+
+        .news-date {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .news-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .read-link {
+            color: var(--terracotta);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .favorite-form {
+            display: inline-flex;
+            margin: 0;
+        }
+
+        .favorite-button {
+            border: none;
+            background: transparent;
+            color: var(--terracotta);
+            cursor: pointer;
+            font-size: 23px;
+            line-height: 1;
+            padding: 2px;
+            transition: transform .2s;
+        }
+
+        .favorite-button:hover {
+            transform: scale(1.18);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 45px 20px;
+            text-align: center;
+            background: white;
+            border: 1px dashed var(--line);
+            border-radius: 12px;
+        }
+
+        .empty-state h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 23px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* RODAPÉ */
+
+        .footer {
+            border-top: 1px solid var(--line);
+            padding: 22px 0;
+            color: var(--muted);
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .footer strong {
+            color: var(--olive);
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 1050px) {
+            .news-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .main {
+                padding: 25px 4%;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 18px 20px;
+            }
+
+            .brand {
+                padding: 0 5px 15px;
+            }
+
+            .brand-name {
+                font-size: 27px;
+            }
+
+            .menu-label,
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .menu {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-top: 13px;
+            }
+
+            .menu a {
+                white-space: nowrap;
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .welcome {
+                padding: 27px 23px;
+                margin-top: 25px;
+            }
+
+            .welcome::after {
+                font-size: 120px;
+                right: 5px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: center;
+            }
+
+            .reader-label {
+                display: none;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-name">Nosso <span>SP.</span></div>
+            <div class="brand-subtitle">Informação que conecta</div>
+        </div>
+
+        <div class="menu-label">Área do leitor</div>
+
+        <nav class="menu">
+            <a href="#inicio" class="active">
+                <span class="menu-icon">⌂</span>
+                Início
+            </a>
+
+            <a href="{% url 'explorar' %}">
+                <span class="menu-icon">⌕</span>
+                Explorar notícias
+            </a>
+
+            <a href="#salvos">
+                <span class="menu-icon">♡</span>
+                Notícias salvas
+            </a>
+
+            <a href="#comentarios">
+                <span class="menu-icon">▤</span>
+                Meus comentários
+            </a>
+
+            <a href="#perfil">
+                <span class="menu-icon">◉</span>
+                Meu perfil
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="reader-mini">
+                <div class="avatar">L</div>
+                <div>
+                    <strong>Leitor</strong>
+                    <small>Conta de demonstração</small>
+                </div>
+            </div>
+
+            <a href="{% url 'logout' %}" class="logout">
+                ↗ &nbsp; Sair da conta
+            </a>
+        </div>
+
+    </aside>
+
+
+    <main class="main" id="inicio">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                Nosso SP / <strong>Área do leitor</strong>
+            </div>
+
+            <div class="topbar-right">
+                <span class="reader-label">{{ usuario_email }}</span>
+                <div class="top-avatar">L</div>
+            </div>
+        </header>
+
+
+        <section class="welcome">
+            <div class="eyebrow">Sua cidade. Sua informação.</div>
+
+            <h1>
+                Bom ter você por aqui.<br>
+                <span>Vamos acompanhar São Paulo?</span>
+            </h1>
+
+            <p>
+                Explore histórias, acompanhe o que acontece nos bairros
+                e fique por dentro das notícias que fazem parte da vida
+                da nossa cidade.
+            </p>
+        </section>
+
+
+        <!-- CATEGORIAS -->
+        <section>
+            <div class="section-heading">
+                <div>
+                    <h2>Explore por assunto</h2>
+                    <p>Encontre notícias sobre o que importa para você.</p>
+                </div>
+            </div>
+
+            <div class="categories">
+                <a href="{% url 'explorar' %}" class="category">Todas as notícias</a>
+                <a href="{% url 'explorar' %}" class="category">Cidade</a>
+                <a href="{% url 'explorar' %}" class="category">Política</a>
+                <a href="{% url 'explorar' %}" class="category">Cultura</a>
+                <a href="{% url 'explorar' %}" class="category">Esportes</a>
+                <a href="{% url 'explorar' %}" class="category">Educação</a>
+                <a href="{% url 'explorar' %}" class="category">Meio ambiente</a>
+            </div>
+        </section>
+
+
+        <!-- ÚLTIMAS NOTÍCIAS -->
+        <section class="news-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>As últimas de São Paulo</h2>
+                    <p>Confira as publicações mais recentes do Nosso SP.</p>
+                </div>
+
+                <a href="{% url 'explorar' %}" class="see-all">
+                    Ver todas →
+                </a>
+            </div>
+
+            <div class="news-grid">
+
+                {% for publicacao in publicacoes %}
+
+                    <article class="news-card">
+
+                        {% if publicacao.imagem %}
+                            <img
+                                src="{{ publicacao.imagem }}"
+                                alt="{{ publicacao.titulo }}"
+                                class="news-image"
+                            >
+                        {% else %}
+                            <div class="image-placeholder">
+                                Nosso SP.
+                            </div>
+                        {% endif %}
+
+                        <div class="news-content">
+
+                            <span class="news-category">
+                                {{ publicacao.categoria }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <p>{{ publicacao.resumo|truncatewords:22 }}</p>
+
+                            <div class="news-footer">
+
+                                <span class="news-date">
+                                    {{ publicacao.data_criacao|date:"d/m/Y" }}
+                                </span>
+
+                                <div class="news-actions">
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'alternar_favorito' publicacao.id %}"
+                                        class="favorite-form"
+                                    >
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="favorite-button"
+                                            title="{% if publicacao.id in favoritos_ids %}Remover dos favoritos{% else %}Salvar nos favoritos{% endif %}"
+                                            aria-label="{% if publicacao.id in favoritos_ids %}Remover dos favoritos{% else %}Salvar nos favoritos{% endif %}"
+                                        >
+                                            {% if publicacao.id in favoritos_ids %}
+                                                ♥
+                                            {% else %}
+                                                ♡
+                                            {% endif %}
+                                        </button>
+                                    </form>
+
+                                    <a
+                                        href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                                        class="read-link"
+                                    >
+                                        Ler notícia →
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <h3>A cidade ainda está em silêncio...</h3>
+                        <p>Assim que novas notícias forem publicadas, elas aparecerão aqui.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- NOTÍCIAS SALVAS -->
+        <section class="news-section" id="salvos">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Suas notícias salvas</h2>
+                    <p>Histórias que você escolheu guardar.</p>
+                </div>
+            </div>
+
+            <div class="news-grid">
+
+                {% for publicacao in noticias_salvas %}
+
+                    <article class="news-card">
+
+                        {% if publicacao.imagem %}
+                            <img
+                                src="{{ publicacao.imagem }}"
+                                alt="{{ publicacao.titulo }}"
+                                class="news-image"
+                            >
+                        {% else %}
+                            <div class="image-placeholder">
+                                Nosso SP.
+                            </div>
+                        {% endif %}
+
+                        <div class="news-content">
+
+                            <span class="news-category">
+                                {{ publicacao.categoria }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <p>{{ publicacao.resumo|truncatewords:22 }}</p>
+
+                            <div class="news-footer">
+
+                                <a
+                                    href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                                    class="read-link"
+                                >
+                                    Ler notícia →
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'alternar_favorito' publicacao.id %}"
+                                    class="favorite-form"
+                                >
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="favorite-button"
+                                        title="Remover dos favoritos"
+                                        aria-label="Remover dos favoritos"
+                                    >
+                                        ♥
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <h3>Você ainda não salvou notícias.</h3>
+                        <p>Clique no coração de uma notícia para guardá-la aqui.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+       
+<!-- MEUS COMENTÁRIOS -->
+<section class="news-section" id="comentarios">
+
+    <div class="section-heading">
+        <div>
+            <h2>Meus comentários</h2>
+            <p>Acompanhe suas participações nas notícias do Nosso SP.</p>
+        </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+
+        {% for comentario in meus_comentarios %}
+
+            <article style="
+                background:white;
+                border:1px solid var(--line);
+                border-radius:11px;
+                padding:22px;
+            ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:12px;
+                    flex-wrap:wrap;
+                    margin-bottom:12px;
+                ">
+
+                    <span class="news-category">
+                        {{ comentario.noticia.categoria }}
+                    </span>
+
+                    {% if comentario.aprovado %}
+                        <span style="
+                            color:#343D2E;
+                            background:#E8EEE4;
+                            padding:6px 11px;
+                            border-radius:20px;
+                            font-size:10px;
+                            font-weight:800;
+                        ">
+                            APROVADO
+                        </span>
+                    {% else %}
+                        <span style="
+                            color:#956A1D;
+                            background:#F8EFD9;
+                            padding:6px 11px;
+                            border-radius:20px;
+                            font-size:10px;
+                            font-weight:800;
+                        ">
+                            AGUARDANDO APROVAÇÃO
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <h3 style="
+                    font-family:'DM Serif Display',serif;
+                    font-size:21px;
+                    font-weight:400;
+                    margin-bottom:10px;
+                ">
+                    {{ comentario.noticia.titulo }}
+                </h3>
+
+                <p style="
+                    color:#66665C;
+                    font-size:13px;
+                    line-height:1.8;
+                    margin-bottom:15px;
+                ">
+                    {{ comentario.texto|linebreaksbr }}
+                </p>
+
+                <div style="
+                    border-top:1px solid var(--line);
+                    padding-top:12px;
+                    color:var(--muted);
+                    font-size:10px;
+                ">
+                    Enviado em {{ comentario.data_criacao|date:"d/m/Y às H:i" }}
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty-state">
+                <h3>Você ainda não comentou.</h3>
+                <p>Participe das conversas nas notícias do Nosso SP.</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<div id="perfil"></div>
+
+
+
+        <footer class="footer">
+            <span><strong>Nosso SP.</strong> Informação que conecta.</span>
+            <span>Portal de Notícias Comunitárias Colaborativo</span>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

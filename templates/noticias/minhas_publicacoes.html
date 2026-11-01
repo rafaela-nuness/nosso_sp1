@@ -1,0 +1,289 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas publicações | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/minhas_publicacoes.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <div class="sidebar-divider"></div>
+
+        <p class="menu-label">SUA REDAÇÃO</p>
+
+        <nav class="menu">
+            <a href="/painel/" class="menu-item">
+                <span>01</span> Início
+            </a>
+
+            <a href="/minhas-publicacoes/" class="menu-item active">
+                <span>02</span> Minhas publicações
+            </a>
+
+            <a href="/nova-noticia/" class="menu-item">
+                <span>03</span> Escrever notícia
+            </a>
+
+            <a href="/explorar/" class="menu-item">
+                <span>04</span> Explorar portal
+            </a>
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span>↗</span> Sair da redação
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div>
+                <strong>Nosso SP</strong>
+                <span>Jornalismo independente</span>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                <a href="/">NOSSO SP</a>
+                <span>/</span>
+                <a href="/painel/">REDAÇÃO</a>
+                <span>/</span>
+                <span>PUBLICAÇÕES</span>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">JS</div>
+                <div class="user-details">
+                    <strong>{{ usuario_email }}</strong>
+                    <span>Jornalista</span>
+                </div>
+            </div>
+        </header>
+
+
+        <section class="page-intro">
+            <div>
+                <p class="eyebrow">ACERVO DA REDAÇÃO · NOSSO SP</p>
+                <h1>Histórias que já ganharam <em>as ruas.</em></h1>
+                <p class="intro-description">
+                    Organize suas matérias, acompanhe suas publicações
+                    e continue contando o que acontece na cidade.
+                </p>
+            </div>
+
+            <a href="/nova-noticia/" class="primary-button">
+                ＋ Escrever notícia <span>→</span>
+            </a>
+        </section>
+
+
+        <section class="overview">
+            <div class="overview-heading">
+                <p class="eyebrow">SEU TRABALHO EM NÚMEROS</p>
+                <span>ACERVO PESSOAL · 2026</span>
+            </div>
+
+            <div class="overview-grid">
+                <article class="overview-card">
+                    <span>PUBLICAÇÕES</span>
+                    <strong>{{ total_publicacoes|stringformat:"02d" }}</strong>
+                    <p>Notícias cadastradas</p>
+                </article>
+
+                <article class="overview-card">
+                    <span>PUBLICADAS</span>
+                    <strong>{{ total_publicadas|stringformat:"02d" }}</strong>
+                    <p>Disponíveis no portal</p>
+                </article>
+
+                <article class="overview-card">
+                    <span>RASCUNHOS</span>
+                    <strong>{{ total_rascunhos|stringformat:"02d" }}</strong>
+                    <p>Em desenvolvimento</p>
+                </article>
+            </div>
+        </section>
+
+
+        <section class="archive" id="lista">
+
+            <div class="archive-heading">
+                <div>
+                    <p class="eyebrow">SEU ACERVO</p>
+                    <h2>Minhas histórias.</h2>
+                    <p class="archive-description">
+                        Todas as suas matérias reunidas em um só lugar.
+                    </p>
+                </div>
+
+                <span class="total-label">
+                    {{ total_publicacoes }} PUBLICAÇÕES
+                </span>
+            </div>
+
+
+            <div class="filters">
+
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input type="search" id="searchInput"
+                           placeholder="Buscar uma notícia...">
+                </div>
+
+                <div class="filter-buttons">
+                    <button class="filter-button active" data-filter="todas">
+                        Todas
+                    </button>
+
+                    <button class="filter-button" data-filter="publicado">
+                        Publicadas
+                    </button>
+
+                    <button class="filter-button" data-filter="rascunho">
+                        Rascunhos
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="publication-list" id="publicationList">
+
+                {% for publicacao in publicacoes %}
+
+                    <article class="publication-item" data-status="{{ publicacao.status }}">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                                {% if publicacao.regiao %}
+                                    · {{ publicacao.regiao|upper }}
+                                {% endif %}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <p>
+                                {{ publicacao.data_criacao|date:"d/m/Y" }}
+                                <span>·</span> Por {{ usuario_email }}
+                            </p>
+                        </div>
+
+                        <span class="publication-status {% if publicacao.status == 'publicado' %}published{% else %}draft{% endif %}">
+                            {% if publicacao.status == "publicado" %}
+                                Publicado
+                            {% else %}
+                                Rascunho
+                            {% endif %}
+                        </span>
+
+                        <div class="publication-actions">
+                            {% if publicacao.status == "publicado" %}
+                                <a href="{% url 'noticia' %}?id={{ publicacao.id }}" title="Visualizar">↗</a>
+                            {% endif %}
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <p class="section-description">
+                        Você ainda não cadastrou nenhuma notícia.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+            <p class="empty-message" id="emptyMessage">
+                Nenhuma publicação encontrada.
+            </p>
+
+        </section>
+
+
+        <section class="editorial-cta">
+            <div>
+                <p class="eyebrow">A CIDADE NÃO PARA</p>
+                <h2>Sempre existe uma nova história esperando para ser contada.</h2>
+            </div>
+
+            <a href="/nova-noticia/" class="cta-link">
+                Começar uma pauta <span>→</span>
+            </a>
+        </section>
+
+
+        <footer class="footer">
+            <a href="/" class="footer-logo">nosso<span>sp.</span></a>
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const filterButtons = document.querySelectorAll(".filter-button");
+        const publicationItems = document.querySelectorAll(".publication-item");
+        const emptyMessage = document.getElementById("emptyMessage");
+
+        let currentFilter = "todas";
+
+        function filterPublications() {
+            const search = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            publicationItems.forEach(item => {
+                const status = item.dataset.status;
+                const text = item.innerText.toLowerCase();
+
+                const matchesSearch = text.includes(search);
+                const matchesFilter =
+                    currentFilter === "todas" || status === currentFilter;
+
+                const visible = matchesSearch && matchesFilter;
+
+                item.style.display = visible ? "grid" : "none";
+
+                if (visible) visibleCount++;
+            });
+
+            emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        searchInput.addEventListener("input", filterPublications);
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                filterButtons.forEach(item => item.classList.remove("active"));
+
+                button.classList.add("active");
+                currentFilter = button.dataset.filter;
+
+                filterPublications();
+            });
+        });
+
+        filterPublications();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderação de comentários | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <div class="sidebar-divider"></div>
+
+        <p class="menu-label">ADMINISTRAÇÃO</p>
+
+        <nav class="menu">
+            <a href="{% url 'administracao' %}" class="menu-item">
+                <span>01</span> Início
+            </a>
+
+            <a href="{% url 'administracao' %}#publicacoes" class="menu-item">
+                <span>02</span> Publicações
+            </a>
+
+            <a href="{% url 'comentarios' %}" class="menu-item active">
+                <span>03</span> Comentários
+            </a>
+
+            <a href="{% url 'nova_noticia' %}" class="menu-item">
+                <span>04</span> Nova notícia
+            </a>
+
+            <a href="{% url 'explorar' %}" class="menu-item">
+                <span>05</span> Explorar portal
+            </a>
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span>↗</span> Sair
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div>
+                <strong>Nosso SP</strong>
+                <span>Jornalismo independente</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                <a href="/">NOSSO SP</a>
+                <span>/</span>
+                <span>COMENTÁRIOS</span>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-details">
+                    <strong>{{ usuario_email }}</strong>
+                    <span>Gestão do portal</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="intro">
+            <div class="intro-content">
+                <p class="eyebrow">MODERAÇÃO · NOSSO SP</p>
+
+                <h1>
+                    A comunidade participa.
+                    <em>Você ajuda a manter o diálogo.</em>
+                </h1>
+
+                <p class="intro-description">
+                    Analise as mensagens enviadas pelos leitores
+                    e gerencie os comentários publicados no portal.
+                </p>
+            </div>
+
+            <div class="intro-decoration">
+                <span class="decoration-number">03</span>
+                <span class="decoration-text">DIÁLOGO ABERTO.<br>COMUNIDADE ATIVA.</span>
+                <span class="decoration-line"></span>
+            </div>
+        </section>
+
+        <section class="welcome-message">
+            <div>
+                <p class="eyebrow">CENTRAL DE MODERAÇÃO</p>
+                <h2>Comentários dos leitores.</h2>
+            </div>
+
+            <p>
+                Revise as contribuições antes de disponibilizá-las
+                publicamente.
+            </p>
+        </section>
+
+        <section class="stats">
+            <article class="stat-card">
+                <span class="stat-label">PENDENTES</span>
+                <strong>{{ pendentes|length|stringformat:"02d" }}</strong>
+                <span class="stat-description">Aguardando aprovação</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">APROVADOS</span>
+                <strong>{{ aprovados|length|stringformat:"02d" }}</strong>
+                <span class="stat-description">Visíveis no portal</span>
+            </article>
+        </section>
+
+        <section class="publications">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">REVISÃO DE CONTEÚDO</p>
+                    <h2>Aguardando aprovação.</h2>
+                    <p class="section-description">
+                        Comentários enviados pelos leitores que ainda não foram publicados.
+                    </p>
+                </div>
+            </div>
+
+            <div class="publication-list">
+
+                {% for comentario in pendentes %}
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ comentario.noticia.categoria|upper }}
+                            </span>
+
+                            <h3>{{ comentario.nome }}</h3>
+
+                            <p>{{ comentario.texto|linebreaksbr }}</p>
+
+                            <span class="publication-date">
+                                {{ comentario.noticia.titulo }}
+                                · {{ comentario.data_criacao|date:"d/m/Y H:i" }}
+                            </span>
+                        </div>
+
+                        <div class="publication-actions">
+
+                            <form method="POST" action="{% url 'moderar_comentario' comentario.id 'aprovar' %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="publication-edit"
+                                        title="Aprovar comentário">
+                                    ✓
+                                </button>
+                            </form>
+
+                            <form method="POST"
+                                  action="{% url 'moderar_comentario' comentario.id 'rejeitar' %}"
+                                  onsubmit="return confirm('Deseja realmente rejeitar este comentário?');">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="publication-delete"
+                                        title="Rejeitar comentário">
+                                    ✕
+                                </button>
+                            </form>
+
+                        </div>
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Não existem comentários aguardando aprovação.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section class="publications">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CONTEÚDO PUBLICADO</p>
+                    <h2>Comentários aprovados.</h2>
+                    <p class="section-description">
+                        Mensagens que já estão disponíveis para os leitores.
+                    </p>
+                </div>
+            </div>
+
+            <div class="publication-list">
+
+                {% for comentario in aprovados %}
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ comentario.noticia.categoria|upper }}
+                            </span>
+
+                            <h3>{{ comentario.nome }}</h3>
+
+                            <p>{{ comentario.texto|linebreaksbr }}</p>
+
+                            <span class="publication-date">
+                                {{ comentario.noticia.titulo }}
+                                · {{ comentario.data_criacao|date:"d/m/Y H:i" }}
+                            </span>
+                        </div>
+
+                        <span class="publication-status published">
+                            Aprovado
+                        </span>
+
+                        <div class="publication-actions">
+                            <form method="POST"
+                                  action="{% url 'moderar_comentario' comentario.id 'rejeitar' %}"
+                                  onsubmit="return confirm('Deseja realmente remover este comentário?');">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="publication-delete"
+                                        title="Remover comentário">
+                                    ✕
+                                </button>
+                            </form>
+                        </div>
+
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Ainda não existem comentários aprovados.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="/" class="footer-logo">
+                nosso<span>sp.</span>
+            </a>
+
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

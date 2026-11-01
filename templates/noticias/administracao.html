@@ -1,0 +1,251 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <a href="/" class="logo">nosso<span>sp.</span></a>
+
+        <div class="sidebar-divider"></div>
+
+        <p class="menu-label">ADMINISTRAÇÃO</p>
+
+        <nav class="menu">
+            <a href="{% url 'administracao' %}" class="menu-item active">
+                <span>01</span> Início
+            </a>
+
+            <a href="#publicacoes" class="menu-item">
+                <span>02</span> Publicações
+            </a>
+
+            <a href="{% url 'comentarios' %}" class="menu-item">
+                <span>03</span> Comentários
+            </a>
+
+            <a href="{% url 'nova_noticia' %}" class="menu-item">
+                <span>04</span> Nova notícia
+            </a>
+
+            <a href="{% url 'explorar' %}" class="menu-item">
+                <span>05</span> Explorar portal
+            </a>
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span>↗</span> Sair
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div>
+                <strong>Nosso SP</strong>
+                <span>Jornalismo independente</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                <a href="/">NOSSO SP</a>
+                <span>/</span>
+                <span>ADMINISTRAÇÃO</span>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-details">
+                    <strong>{{ usuario_email }}</strong>
+                    <span>Gestão do portal</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="intro">
+            <div class="intro-content">
+                <p class="eyebrow">CENTRAL ADMINISTRATIVA · NOSSO SP</p>
+
+                <h1>
+                    Informação, organização
+                    <em>e gestão da comunidade.</em>
+                </h1>
+
+                <p class="intro-description">
+                    Gerencie as publicações, acompanhe a produção
+                    editorial e mantenha o portal organizado.
+                </p>
+
+                <a href="{% url 'nova_noticia' %}" class="primary-button">
+                    <span>＋</span> Nova notícia
+                    <span class="button-arrow">→</span>
+                </a>
+            </div>
+
+            <div class="intro-decoration">
+                <span class="decoration-number">01</span>
+                <span class="decoration-text">INFORMAÇÃO LOCAL.<br>VOZES REAIS.</span>
+                <span class="decoration-line"></span>
+            </div>
+        </section>
+
+        <section class="welcome-message">
+            <div>
+                <p class="eyebrow">BEM-VINDO DE VOLTA</p>
+                <h2>Olá, administrador. Bem-vindo à gestão.</h2>
+            </div>
+
+            <p>
+                Acompanhe as atividades e contribua para a organização
+                do Nosso SP.
+            </p>
+        </section>
+
+        <section class="stats">
+            <article class="stat-card">
+                <span class="stat-label">PUBLICAÇÕES</span>
+                <strong>{{ total_publicacoes|stringformat:"02d" }}</strong>
+                <span class="stat-description">Notícias cadastradas</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">EM PRODUÇÃO</span>
+                <strong>{{ total_rascunhos|stringformat:"02d" }}</strong>
+                <span class="stat-description">Rascunhos salvos</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">COMENTÁRIOS</span>
+                <strong>{{ total_comentarios|stringformat:"02d" }}</strong>
+                <span class="stat-description">Comentários recebidos</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">PENDENTES</span>
+                <strong>{{ total_pendentes|stringformat:"02d" }}</strong>
+                <span class="stat-description">Aguardando moderação</span>
+            </article>
+        </section>
+
+        <section class="publications" id="publicacoes">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CONTROLE EDITORIAL</p>
+                    <h2>Controle de publicações.</h2>
+                    <p class="section-description">
+                        Visão geral das notícias cadastradas no Nosso SP.
+                        Consulte o status e gerencie o conteúdo do portal.
+                    </p>
+                </div>
+
+                <a href="{% url 'nova_noticia' %}" class="text-link">
+                    Cadastrar notícia →
+                </a>
+            </div>
+
+            <div class="publication-list">
+
+                {% for publicacao in publicacoes %}
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <span class="publication-date">
+                                {% if publicacao.regiao %}
+                                    {{ publicacao.regiao }}
+                                {% else %}
+                                    Região não informada
+                                {% endif %}
+
+                                · {{ publicacao.data_criacao|date:"d/m/Y" }}
+                            </span>
+                        </div>
+
+                        <span class="publication-status {% if publicacao.status == 'publicado' %}published{% else %}draft{% endif %}">
+                            {{ publicacao.get_status_display }}
+                        </span>
+
+                        <div class="publication-actions">
+
+                            {% if publicacao.status == "publicado" %}
+                                <a href="/noticia/?id={{ publicacao.id }}"
+                                   class="publication-arrow"
+                                   title="Visualizar notícia">↗</a>
+                            {% endif %}
+
+                            <a href="{% url 'editar_noticia' publicacao.id %}"
+                               class="publication-edit"
+                               title="Editar notícia">✎</a>
+
+                            <form
+                                action="{% url 'excluir_noticia' publicacao.id %}"
+                                method="POST"
+                                onsubmit="return confirm('Tem certeza de que deseja excluir esta notícia?');"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="publication-delete"
+                                        title="Excluir notícia">✕</button>
+                            </form>
+
+                        </div>
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Ainda não existem notícias cadastradas no portal.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section class="editorial-cta">
+            <div>
+                <p class="eyebrow">PARTICIPAÇÃO DA COMUNIDADE</p>
+                <h2>
+                    Acompanhe os comentários
+                    e mantenha o diálogo ativo.
+                </h2>
+            </div>
+
+            <a href="{% url 'comentarios' %}" class="cta-link">
+                Moderar comentários <span>→</span>
+            </a>
+        </section>
+
+        <footer class="footer">
+            <a href="/" class="footer-logo">
+                nosso<span>sp.</span>
+            </a>
+
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

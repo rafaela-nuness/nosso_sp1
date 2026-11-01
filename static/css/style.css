@@ -43,6 +43,8 @@ img {
     max-width: 100%;
 }
 
+/* TOPO */
+
 .topline {
     min-height: 34px;
     padding: 9px 5%;
@@ -60,6 +62,8 @@ img {
 .topline-center {
     color: var(--amber);
 }
+
+/* CABEÇALHO */
 
 .header {
     min-height: 88px;
@@ -99,13 +103,24 @@ img {
     color: var(--terracotta);
 }
 
+/* BOTÕES DO CABEÇALHO */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .header-button {
     padding: 13px 17px;
     border: 1px solid var(--charcoal);
     border-radius: 3px;
     font-size: 11px;
     font-weight: 800;
-    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .header-button span {
@@ -115,6 +130,20 @@ img {
 .header-button:hover {
     background: var(--olive);
     color: var(--cream);
+}
+
+/* BOTÃO CADASTRAR */
+
+.header-button-register {
+    background: var(--olive);
+    color: var(--cream);
+    border-color: var(--olive);
+}
+
+.header-button-register:hover {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
 }
 
 .menu-toggle {
@@ -799,16 +828,23 @@ img {
         position: relative;
         min-height: 72px;
         padding: 16px 5%;
+        gap: 10px;
     }
 
     .logo {
         font-size: 33px;
     }
 
-    .header-button {
+    .header-actions {
         margin-left: auto;
-        padding: 11px 12px;
+        gap: 6px;
+    }
+
+    .header-button {
+        padding: 10px 9px;
         font-size: 9px;
+        white-space: nowrap;
+        margin-left: 0;
     }
 
     .header-button span {
@@ -817,6 +853,7 @@ img {
 
     .menu-toggle {
         display: block;
+        flex-shrink: 0;
     }
 
     .navigation {
@@ -1018,18 +1055,32 @@ img {
     }
 }
 
+/* CELULARES PEQUENOS */
+
 @media (max-width: 380px) {
     .header {
-        gap: 10px;
+        gap: 7px;
+    }
+
+    .header-actions {
+        gap: 5px;
     }
 
     .logo {
-        font-size: 29px;
+        font-size: 27px;
     }
 
     .header-button {
-        padding: 10px 8px;
+        padding: 9px 6px;
         font-size: 8px;
+    }
+
+    .header-button span {
+        margin-left: 3px;
+    }
+
+    .menu-toggle {
+        font-size: 22px;
     }
 
     .hero h1 {
@@ -1048,6 +1099,8 @@ img {
         flex-direction: column;
     }
 }
+
+/* ACESSIBILIDADE */
 
 @media (prefers-reduced-motion: reduce) {
     *,
