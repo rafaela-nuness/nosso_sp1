@@ -81,12 +81,17 @@ a {
 .menu {
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
     gap: 8px;
+=======
+    gap: 7px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .menu-item {
     display: flex;
     align-items: center;
+<<<<<<< HEAD
     gap: 10px;
     padding: 14px 13px;
     border-radius: 7px;
@@ -98,17 +103,49 @@ a {
 .menu-item span {
     color: var(--amber);
     font-size: 11px;
+=======
+    gap: 13px;
+    padding: 13px 14px;
+    border-radius: 9px;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.menu-item span,
+.menu-item .menu-icon {
+    width: 20px;
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .menu-item:hover,
 .menu-item.active {
+<<<<<<< HEAD
     background: #46503D;
+=======
+    background: rgba(243, 235, 221, 0.13);
+    color: var(--amber);
+}
+
+.menu-item:hover span,
+.menu-item.active span {
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     color: var(--amber);
 }
 
 .menu-item.sair {
     margin-top: 22px;
+<<<<<<< HEAD
     color: #D4D7CA;
+=======
+    color: #FFFFFF;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .sidebar-bottom {

@@ -84,6 +84,7 @@ button, input {
 .menu {
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
     gap: 9px;
 }
 
@@ -98,16 +99,55 @@ button, input {
 .menu-item span {
     color: var(--amber);
     margin-right: 7px;
+=======
+    gap: 7px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 14px;
+    border-radius: 9px;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.menu-item span,
+.menu-item .menu-icon {
+    width: 20px;
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .menu-item:hover,
 .menu-item.active {
+<<<<<<< HEAD
     background: #46503D;
+=======
+    background: rgba(243, 235, 221, 0.13);
+    color: var(--amber);
+}
+
+.menu-item:hover span,
+.menu-item.active span {
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     color: var(--amber);
 }
 
 .menu-item.sair {
+<<<<<<< HEAD
     margin-top: 15px;
+=======
+    margin-top: 22px;
+    color: #FFFFFF;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .sidebar-bottom {

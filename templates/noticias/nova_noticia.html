@@ -47,7 +47,11 @@
 
         <div class="editor-layout">
 
+<<<<<<< HEAD
             <form class="editor-form" method="POST" enctype="multipart/form-data">
+=======
+            <form class="editor-form" id="formNoticia" method="POST" enctype="multipart/form-data">
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
                 {% csrf_token %}
 
                 {% if erro %}
@@ -214,7 +218,11 @@
 
                 <div class="form-actions">
 
+<<<<<<< HEAD
                     <button type="reset" class="secondary-button">
+=======
+                    <button type="button" id="limparFormulario" class="secondary-button">
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
                         Limpar formulário
                     </button>
 
@@ -286,6 +294,39 @@
             previaFoto.hidden = false;
 
         });
+<<<<<<< HEAD
+=======
+        // Limpar formulário: apaga textos, seleções e imagem, sem enviar
+        document.getElementById("limparFormulario").addEventListener("click", function () {
+            const formulario = document.getElementById("formNoticia");
+
+            formulario.querySelectorAll("input, textarea, select").forEach(function (campo) {
+                if (campo.type === "hidden" || campo.type === "submit" || campo.type === "button") {
+                    return; // mantém o token CSRF
+                }
+
+                if (campo.tagName === "SELECT") {
+                    campo.selectedIndex = 0;
+                } else if (campo.type === "checkbox" || campo.type === "radio") {
+                    campo.checked = false;
+                } else {
+                    campo.value = "";
+                }
+            });
+
+            if (previaFoto.src && previaFoto.src.indexOf("blob:") === 0) {
+                URL.revokeObjectURL(previaFoto.src);
+            }
+
+            previaFoto.hidden = true;
+            previaFoto.removeAttribute("src");
+
+            const erro = formulario.querySelector(".form-error");
+            if (erro) { erro.remove(); }
+
+            document.getElementById("titulo").focus();
+        });
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     </script>
 
 </body>

@@ -159,6 +159,16 @@ img {
     padding: 55px 8% 52px;
     overflow: hidden;
     border-bottom: 1px solid var(--line);
+<<<<<<< HEAD
+=======
+    background-color: var(--olive);
+    background-image:
+        linear-gradient(rgba(20, 24, 18, 0.68), rgba(20, 24, 18, 0.72)),
+        url("https://images.unsplash.com/photo-1543059080-f9b1272213d5?auto=format&fit=crop&w=1800&q=80");
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .explore-kicker {
@@ -193,7 +203,11 @@ img {
 }
 
 .explore-hero h1 em {
+<<<<<<< HEAD
     color: var(--terracotta);
+=======
+    color: #E98A66;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     font-weight: 400;
 }
 
@@ -206,7 +220,11 @@ img {
 }
 
 .explore-intro p {
+<<<<<<< HEAD
     color: #65655B;
+=======
+    color: #EDEAE0;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     font-size: 12px;
     line-height: 1.95;
 }
@@ -232,9 +250,15 @@ img {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+<<<<<<< HEAD
     border: 1px solid var(--terracotta);
     border-radius: 50%;
     color: var(--terracotta);
+=======
+    border: 1px solid #E98A66;
+    border-radius: 50%;
+    color: #E98A66;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     transform: rotate(10deg);
 }
 
@@ -372,21 +396,36 @@ img {
 .category-filters {
     display: flex;
     flex-wrap: wrap;
+<<<<<<< HEAD
     gap: 10px;
     margin-top: 22px;
+=======
+    justify-content: center;
+    gap: 12px;
+    margin-top: 26px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 .filter-chip {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+<<<<<<< HEAD
     min-height: 39px;
     padding: 0 16px;
+=======
+    min-height: 48px;
+    padding: 0 24px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     border: 1px solid rgba(38, 39, 34, 0.22);
     border-radius: 30px;
     background: transparent;
     color: var(--charcoal);
+<<<<<<< HEAD
     font-size: 10px;
+=======
+    font-size: 12px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     font-weight: 700;
     transition: background 0.2s ease, color 0.2s ease,
         border-color 0.2s ease;
@@ -750,10 +789,76 @@ img {
 /* RODAPÉ */
 
 .footer {
+<<<<<<< HEAD
+=======
+    padding: 70px 5% 28px;
+    background: var(--olive);
+    color: var(--cream);
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.2fr 1fr;
+    gap: 48px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgba(243, 235, 221, 0.22);
+}
+
+.footer-logo {
+    display: inline-block;
+    font-size: 37px;
+}
+
+.footer-logo span {
+    color: var(--amber);
+}
+
+.footer-brand p {
+    max-width: 330px;
+    margin-top: 20px;
+    color: #C9CBBE;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+}
+
+.footer-column h4 {
+    margin-bottom: 6px;
+    color: var(--amber);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.footer-column a,
+.footer-column span {
+    color: #E4E2D6;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.footer-column a {
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+    color: var(--amber);
+}
+
+.footer-bottom {
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+<<<<<<< HEAD
     gap: 20px;
     padding: 30px 5%;
     border-top: 1px solid var(--line);
@@ -772,12 +877,27 @@ img {
 .footer-copy {
     color: var(--muted);
     font-size: 8px;
+=======
+    gap: 14px;
+    padding-top: 24px;
+}
+
+.back-top,
+.footer-copy {
+    color: #B9BBAE;
+    font-size: 9px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     font-weight: 800;
     letter-spacing: 0.8px;
 }
 
+<<<<<<< HEAD
 .footer-home:hover {
     color: var(--terracotta);
+=======
+.back-top:hover {
+    color: var(--amber);
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 }
 
 /* TABLETS */
@@ -812,6 +932,14 @@ img {
         padding-right: 6%;
     }
 
+<<<<<<< HEAD
+=======
+    .footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 38px;
+    }
+
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     .stories-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -987,6 +1115,7 @@ img {
     }
 
     .category-filters {
+<<<<<<< HEAD
         gap: 8px;
         margin-top: 18px;
     }
@@ -995,6 +1124,16 @@ img {
         min-height: 36px;
         padding: 0 12px;
         font-size: 9px;
+=======
+        gap: 9px;
+        margin-top: 20px;
+    }
+
+    .filter-chip {
+        min-height: 42px;
+        padding: 0 16px;
+        font-size: 10.5px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     }
 
     .secondary-filters {
@@ -1077,6 +1216,7 @@ img {
     }
 
     .footer {
+<<<<<<< HEAD
         justify-content: flex-start;
         gap: 17px;
         padding: 27px 5%;
@@ -1093,6 +1233,20 @@ img {
     .footer-home,
     .footer-copy {
         font-size: 7px;
+=======
+        padding: 55px 5% 24px;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding-bottom: 36px;
+    }
+
+    .back-top,
+    .footer-copy {
+        font-size: 8px;
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     }
 }
 

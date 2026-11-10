@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="{% static 'css/explorar.css' %}">
     <script>document.documentElement.classList.add("js");</script>
 </head>
+<<<<<<< HEAD
 <body>
+=======
+<body id="top">
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
 
     <div class="topline">
         <span>JORNALISMO DE PERTO</span>
@@ -217,10 +221,66 @@
     </main>
 
     <footer class="footer">
+<<<<<<< HEAD
         <a href="{% url 'home' %}" class="logo footer-logo">nosso<span>SP.</span></a>
         <p>Feito para quem vive a cidade.</p>
         <a href="{% url 'home' %}" class="footer-home">VOLTAR AO INÍCIO ↗</a>
         <span class="footer-copy">© 2026 NOSSO SP</span>
+=======
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+                <a href="{% url 'home' %}" class="logo footer-logo">
+                    nosso<span>SP.</span>
+                </a>
+
+                <p>
+                    Notícias, histórias e acontecimentos dos bairros
+                    de São Paulo, feitos por quem vive a cidade.
+                </p>
+            </div>
+
+            <nav class="footer-column" aria-label="Navegação do rodapé">
+                <h4>Navegue</h4>
+                <a href="{% url 'home' %}">Início</a>
+                <a href="{% url 'home' %}#ultimas">Notícias</a>
+                <a href="{% url 'explorar' %}">Explorar</a>
+                <a href="{% url 'home' %}#sobre">Sobre nós</a>
+            </nav>
+
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <a href="mailto:contato@nossosp.com">contato@nossosp.com</a>
+                <span>São Paulo, SP — Brasil</span>
+                <span>Atendimento de segunda a sexta</span>
+            </div>
+
+            <div class="footer-column">
+                <h4>Sua conta</h4>
+                {% if request.session.usuario_tipo %}
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Entrar</a>
+                    <a href="{% url 'cadastro_leitor' %}">Cadastrar</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 NOSSO SP</span>
+
+            <a
+                href="#top"
+                class="back-top"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"
+            >
+                VOLTAR AO TOPO ↑
+            </a>
+        </div>
+
+>>>>>>> 7d5b060 (Minhas alteracoes no projeto)
     </footer>
 
     <script>
