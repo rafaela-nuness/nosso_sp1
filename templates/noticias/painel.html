@@ -1,0 +1,251 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redação | Nosso SP</title>
+    <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <div class="sidebar-divider"></div>
+
+        <p class="menu-label">SUA REDAÇÃO</p>
+
+        <nav class="menu">
+
+            <a href="{% url 'painel' %}" class="menu-item active">
+                <span class="menu-icon">⌂</span> Início
+            </a>
+
+            <a href="{% url 'minhas_publicacoes' %}" class="menu-item">
+                <span class="menu-icon">▤</span> Minhas publicações
+            </a>
+
+            <a href="{% url 'nova_noticia' %}" class="menu-item">
+                <span class="menu-icon">✎</span> Escrever notícia
+            </a>
+
+            <a href="{% url 'explorar' %}" class="menu-item">
+                <span class="menu-icon">⌕</span> Explorar portal
+            </a>
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span class="menu-icon">↗</span> Sair da redação
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <strong>Nosso SP</strong>
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div class="breadcrumb">
+                <a href="{% url 'home' %}">NOSSO SP</a>
+                <span>/</span>
+                <span>REDAÇÃO</span>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">JS</div>
+
+                <div class="user-details">
+                    <strong>João Silva</strong>
+                    <span>Jornalista</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <section class="intro">
+
+            <div class="intro-content">
+
+                <p class="eyebrow">ESPAÇO DO JORNALISTA · NOSSO SP</p>
+
+                <h1>
+                    Toda cidade tem uma história.
+                    <em>Qual será a sua próxima?</em>
+                </h1>
+
+                <p class="intro-description">
+                    Acompanhe suas publicações, descubra o que acontece
+                    na cidade e dê voz às histórias da nossa comunidade.
+                </p>
+
+                <a href="{% url 'nova_noticia' %}" class="primary-button">
+                    <span>＋</span> Escrever uma notícia
+                    <span class="button-arrow">→</span>
+                </a>
+
+            </div>
+
+            <div class="intro-decoration">
+                <span class="decoration-text">INFORMAÇÃO LOCAL.<br>VOZES REAIS.</span>
+                <span class="decoration-line"></span>
+            </div>
+
+        </section>
+
+
+        <section class="welcome-message">
+
+            <div>
+                <p class="eyebrow">BEM-VINDO DE VOLTA</p>
+                <h2>Olá, João. Bom ter você por aqui.</h2>
+            </div>
+
+            <p>
+                Cada publicação é uma oportunidade de aproximar
+                a comunidade da informação.
+            </p>
+
+        </section>
+
+
+        <section class="stats">
+
+            <article class="stat-card">
+                <span class="stat-label">PUBLICAÇÕES</span>
+                <strong>{{ total_publicacoes|stringformat:"02d" }}</strong>
+                <span class="stat-description">Notícias cadastradas</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">EM PRODUÇÃO</span>
+                <strong>{{ total_rascunhos|stringformat:"02d" }}</strong>
+                <span class="stat-description">Rascunhos salvos</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">AGUARDANDO</span>
+                <strong>{{ total_aguardando|stringformat:"02d" }}</strong>
+                <span class="stat-description">Em análise pela administração</span>
+            </article>
+
+        </section>
+
+
+        <section class="publications" id="publicacoes">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">ACERVO PESSOAL</p>
+                    <h2>Da sua redação.</h2>
+                    <p class="section-description">
+                        Acompanhe as histórias que você está construindo.
+                    </p>
+                </div>
+
+                <a href="{% url 'nova_noticia' %}" class="text-link">
+                    Nova publicação →
+                </a>
+
+            </div>
+
+            <div class="publication-list">
+
+                {% for publicacao in publicacoes %}
+
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <span class="publication-date">
+                                {{ publicacao.data_criacao|date:"d/m/Y" }}
+                                · Por João Silva
+                            </span>
+
+                        </div>
+
+                        <span class="publication-status {% if publicacao.status == 'publicado' %}published{% elif publicacao.status == 'negado' %}denied{% elif publicacao.status == 'pendente' %}pending{% else %}draft{% endif %}">
+                            {{ publicacao.get_status_display }}
+                        </span>
+
+                        <div class="publication-actions">
+
+                            {% if publicacao.status == "publicado" %}
+                                <a href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                                   class="publication-arrow"
+                                   title="Visualizar notícia">↗</a>
+                            {% elif publicacao.status == "rascunho" %}
+                                <a href="{% url 'editar_noticia' publicacao.id %}"
+                                   class="publication-edit"
+                                   title="Abrir rascunho">✎</a>
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <p class="section-description">
+                        Ainda não existem notícias cadastradas.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <section class="editorial-cta">
+
+            <div>
+                <p class="eyebrow">UMA CIDADE INTEIRA TEM VOZ</p>
+                <h2>
+                    As próximas grandes histórias
+                    podem começar no seu bairro.
+                </h2>
+            </div>
+
+            <a href="{% url 'nova_noticia' %}" class="cta-link">
+                Começar uma nova pauta <span>→</span>
+            </a>
+
+        </section>
+
+
+        <footer class="footer">
+            <a href="{% url 'home' %}" class="footer-logo">
+                nosso<span>SP.</span>
+            </a>
+
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

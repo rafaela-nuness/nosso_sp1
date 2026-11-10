@@ -1,0 +1,192 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastre-se | Nosso SP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <a href="{% url 'home' %}" class="back-link">
+            ← Voltar ao portal
+        </a>
+    </header>
+
+    <main class="container">
+
+        <section class="form-section">
+
+            <div class="form-heading">
+                <p class="eyebrow">FAÇA PARTE DA COMUNIDADE</p>
+
+                <h1>
+                    Sua cidade.
+                    <em>Sua voz.</em>
+                </h1>
+
+                <p class="description">
+                    Crie sua conta e acompanhe as histórias,
+                    notícias e acontecimentos que movimentam São Paulo.
+                </p>
+            </div>
+
+            <form id="cadastroForm" method="post" action="{% url 'cadastro_leitor' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="nome">NOME COMPLETO</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome"
+                        value="{{ dados.nome|default:'' }}"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-MAIL</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="seuemail@exemplo.com"
+                        value="{{ dados.email|default:'' }}"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="senha">SENHA</label>
+                        <div class="campo-senha">
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Crie uma senha"
+                                minlength="6"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <button type="button" class="toggle-senha" aria-label="Mostrar senha" aria-pressed="false" data-alvo="senha">
+                                <svg class="olho-aberto" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="olho-fechado" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 19c-6.4 0-10-7-10-7a18.6 18.6 0 0 1 5.1-5.9M9.9 5.2A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmar">CONFIRMAR SENHA</label>
+                        <div class="campo-senha">
+                            <input
+                                type="password"
+                                id="confirmar"
+                                name="confirmar"
+                                placeholder="Repita a senha"
+                                minlength="6"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <button type="button" class="toggle-senha" aria-label="Mostrar senha" aria-pressed="false" data-alvo="confirmar">
+                                <svg class="olho-aberto" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="olho-fechado" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 19c-6.4 0-10-7-10-7a18.6 18.6 0 0 1 5.1-5.9M9.9 5.2A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p id="mensagem" class="message{% if erro %} error{% endif %}">{{ erro }}</p>
+
+                <button type="submit" class="submit-button">
+                    Criar minha conta <span>→</span>
+                </button>
+
+            </form>
+
+            <p class="login-link">
+                Já possui uma conta?
+                <a href="{% url 'login' %}">Entrar</a>
+            </p>
+
+        </section>
+
+        <aside class="visual-section">
+
+            <div class="visual-top">
+                <span>01 — NOSSO PROPÓSITO</span>
+                <span>JORNALISMO LOCAL</span>
+            </div>
+
+            <div class="visual-content">
+                <p class="visual-label">MAIS PERTO DA SUA CIDADE.</p>
+
+                <h2>
+                    Porque toda
+                    <em>história</em>
+                    merece ser
+                    <em>contada.</em>
+                </h2>
+
+                <p>
+                    Informação, participação e comunidade.
+                    Um espaço para acompanhar o que acontece
+                    perto de você.
+                </p>
+            </div>
+
+            <div class="visual-bottom">
+                <span>SÃO PAULO, SP</span>
+                <span>INFORMAÇÃO LOCAL. VOZES REAIS.</span>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <script>
+        const formulario = document.getElementById("cadastroForm");
+        const mensagem = document.getElementById("mensagem");
+
+        formulario.addEventListener("submit", function(event) {
+            const senha = document.getElementById("senha").value;
+            const confirmar = document.getElementById("confirmar").value;
+
+            if (senha !== confirmar) {
+                event.preventDefault();
+                mensagem.textContent = "As senhas não coincidem.";
+                mensagem.className = "message error";
+            }
+        });
+
+        document.querySelectorAll(".toggle-senha").forEach(function (botao) {
+            botao.addEventListener("click", function () {
+                const campo = document.getElementById(botao.dataset.alvo);
+                const mostrar = campo.type === "password";
+
+                campo.type = mostrar ? "text" : "password";
+                botao.classList.toggle("ativo", mostrar);
+                botao.setAttribute("aria-pressed", mostrar ? "true" : "false");
+                botao.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+            });
+        });
+    </script>
+</body>
+</html>

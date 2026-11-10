@@ -1,0 +1,480 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar notícias — Nosso SP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/explorar.css' %}">
+    <script>document.documentElement.classList.add("js");</script>
+</head>
+<body id="top">
+
+    <div class="topline">
+        <span>JORNALISMO DE PERTO</span>
+        <span>SÃO PAULO, BRASIL</span>
+        <span>FEITO PARA QUEM VIVE A CIDADE ↗</span>
+    </div>
+
+    <header class="header">
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <nav class="navigation" id="navigation">
+            <a href="{% url 'home' %}">Início</a>
+            <a href="{% url 'explorar' %}" class="active">Explorar</a>
+            <a href="{% url 'home' %}#sobre">Sobre nós</a>
+        </nav>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+    </header>
+
+    <main>
+        <section class="explore-hero">
+            <h1>
+                São Paulo<br>
+                tem muitas<br>
+                <em>histórias.</em>
+            </h1>
+
+            <div class="explore-intro">
+                <p>
+                    Do seu bairro para a cidade inteira.
+                    Explore notícias, descubra novas perspectivas
+                    e encontre histórias que fazem parte da sua vida.
+                </p>
+            </div>
+
+            <div class="hero-decoration" aria-hidden="true">
+                <span>SP</span>
+                <span>✳</span>
+                <span>É NOSSO</span>
+            </div>
+        </section>
+
+        <section class="search-section">
+            <form class="search-form" id="searchForm">
+                <label for="searchInput" class="search-icon">⌕</label>
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Busque por assunto, notícia ou palavra-chave..."
+                    autocomplete="off"
+                >
+                <button type="submit">Buscar <span>↗</span></button>
+            </form>
+
+            <div class="search-note">
+                <span id="resultsCount">{{ publicacoes|length }} HISTÓRIAS</span>
+            </div>
+        </section>
+
+        <section class="filters-section">
+            <div class="filter-heading">
+                <h2 class="filter-title">Escolha seu olhar</h2>
+                <button type="button" id="clearFilters" class="clear-filters">
+                    Limpar filtros ↺
+                </button>
+            </div>
+
+            <div class="category-filters" id="categoryFilters">
+                <button type="button" class="filter-chip selected" data-category="Todas">
+                    Todas as notícias <span>✳</span>
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Cidade">
+                    Cidade
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Política">
+                    Política
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Cultura">
+                    Cultura
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Esportes">
+                    Esportes
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Educação">
+                    Educação
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Meio ambiente">
+                    Meio ambiente
+                </button>
+
+                <button type="button" class="filter-chip" data-category="Segurança">
+                    Segurança
+                </button>
+            </div>
+
+            <div class="secondary-filters">
+                <label for="regionFilter">REGIÃO</label>
+                <select id="regionFilter">
+                    <option value="Todas">Todas as regiões</option>
+                    <option value="Centro">Centro</option>
+                    <option value="Zona Leste">Zona Leste</option>
+                    <option value="Zona Norte">Zona Norte</option>
+                    <option value="Zona Sul">Zona Sul</option>
+                    <option value="Zona Oeste">Zona Oeste</option>
+                </select>
+
+                <label for="sortFilter">ORDENAR</label>
+                <select id="sortFilter">
+                    <option value="recentes">Mais recentes</option>
+                    <option value="antigos">Mais antigas</option>
+                    <option value="titulo">Ordem alfabética</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="results-section" id="resultados">
+            <div class="results-heading">
+                <div>
+                    <h2>Histórias em <em>pauta.</em></h2>
+                </div>
+
+            </div>
+
+            <div class="stories-grid" id="storiesGrid">
+
+                {% for publicacao in publicacoes %}
+
+                    <article
+                        class="story-card {% if forloop.first %}story-featured{% endif %}"
+                        data-category="{{ publicacao.categoria }}"
+                        data-region="{{ publicacao.regiao }}"
+                        data-date="{{ publicacao.data_criacao|date:'Y-m-d H:i:s' }}"
+                        data-title="{{ publicacao.titulo }}"
+                    >
+                        <a href="{% url 'noticia' %}?id={{ publicacao.id }}" class="story-image">
+
+                            {% if publicacao.imagem_url %}
+                                <img
+                                    src="{{ publicacao.imagem_url }}"
+                                    alt="{{ publicacao.titulo }}"
+                                >
+                            {% else %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=85"
+                                    alt="Paisagem urbana de São Paulo"
+                                >
+                            {% endif %}
+
+                            <span class="story-category">{{ publicacao.categoria }}</span>
+                            <span class="story-arrow">↗</span>
+                        </a>
+
+                        <div class="story-meta">
+                            <span>
+                                {{ publicacao.regiao|default:"SÃO PAULO" }}
+                                {% if publicacao.local %} · {{ publicacao.local }}{% endif %}
+                            </span>
+                            <span>{{ publicacao.data_criacao|date:"d/m/Y" }}</span>
+                        </div>
+
+                        <h3>
+                            <a href="{% url 'noticia' %}?id={{ publicacao.id }}">
+                                {{ publicacao.titulo }}
+                            </a>
+                        </h3>
+
+                        <p>{{ publicacao.resumo }}</p>
+
+                        <span class="story-location">
+                            ⌖ {{ publicacao.local|default:"SÃO PAULO" }}
+                        </span>
+                    </article>
+
+                {% empty %}
+
+                    <p>Nenhuma notícia publicada ainda. Volte em breve!</p>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="empty-state" id="emptyState" hidden>
+                <span class="empty-symbol">⌕</span>
+                <h3>Nenhuma história encontrada.</h3>
+                <p>Tente outra palavra ou remova algum filtro.</p>
+                <button type="button" id="emptyClear">Limpar busca e filtros ↺</button>
+            </div>
+
+            <div class="results-footer">
+                <a href="#top" id="backToTop">VOLTAR AO TOPO ↑</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+                <a href="{% url 'home' %}" class="logo footer-logo">
+                    nosso<span>SP.</span>
+                </a>
+
+                <p>
+                    Notícias, histórias e acontecimentos dos bairros
+                    de São Paulo, feitos por quem vive a cidade.
+                </p>
+            </div>
+
+            <nav class="footer-column" aria-label="Navegação do rodapé">
+                <h4>Navegue</h4>
+                <a href="{% url 'home' %}">Início</a>
+                <a href="{% url 'home' %}#ultimas">Notícias</a>
+                <a href="{% url 'explorar' %}">Explorar</a>
+                <a href="{% url 'home' %}#sobre">Sobre nós</a>
+            </nav>
+
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <a href="mailto:contato@nossosp.com">contato@nossosp.com</a>
+                <span>São Paulo, SP — Brasil</span>
+                <span>Atendimento de segunda a sexta</span>
+            </div>
+
+            <div class="footer-column">
+                <h4>Sua conta</h4>
+                {% if request.session.usuario_tipo %}
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Entrar</a>
+                    <a href="{% url 'cadastro_leitor' %}">Cadastrar</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 NOSSO SP</span>
+
+            <a
+                href="#top"
+                class="back-top"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"
+            >
+                VOLTAR AO TOPO ↑
+            </a>
+        </div>
+
+    </footer>
+
+    <script>
+        const searchForm = document.getElementById("searchForm");
+        const searchInput = document.getElementById("searchInput");
+        const categoryFilters = document.getElementById("categoryFilters");
+        const regionFilter = document.getElementById("regionFilter");
+        const sortFilter = document.getElementById("sortFilter");
+        const storiesGrid = document.getElementById("storiesGrid");
+        const resultsCount = document.getElementById("resultsCount");
+        const emptyState = document.getElementById("emptyState");
+
+        const params = new URLSearchParams(window.location.search);
+        const categoriaInicial = params.get("categoria");
+
+        let selectedCategory = categoriaInicial || "Todas";
+
+        function normalizeText(text) {
+            return text
+                .toLocaleLowerCase("pt-BR")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function filterStories() {
+            const query = normalizeText(searchInput.value.trim());
+            const region = regionFilter.value;
+            const cards = Array.from(
+                storiesGrid.querySelectorAll(".story-card")
+            );
+
+            cards.forEach(function (card) {
+                const title = card.dataset.title || "";
+                const category = card.dataset.category || "";
+                const cardRegion = card.dataset.region || "";
+                const content = card.innerText || "";
+
+                const matchesQuery = !query ||
+                    normalizeText(title + " " + category + " " + content)
+                    .includes(query);
+
+                const matchesCategory = selectedCategory === "Todas" ||
+                    normalizeText(category) === normalizeText(selectedCategory);
+
+                const matchesRegion = region === "Todas" ||
+                    cardRegion === region;
+
+                card.hidden = !(
+                    matchesQuery && matchesCategory && matchesRegion
+                );
+            });
+
+            const visibleCards = cards.filter(function (card) {
+                return !card.hidden;
+            });
+
+            const sort = sortFilter.value;
+
+            visibleCards.sort(function (a, b) {
+                if (sort === "titulo") {
+                    return a.dataset.title.localeCompare(
+                        b.dataset.title,
+                        "pt-BR"
+                    );
+                }
+
+                const dateA = new Date(a.dataset.date.replace(" ", "T"));
+                const dateB = new Date(b.dataset.date.replace(" ", "T"));
+
+                return sort === "antigos"
+                    ? dateA - dateB
+                    : dateB - dateA;
+            });
+
+            visibleCards.forEach(function (card) {
+                storiesGrid.appendChild(card);
+            });
+
+            resultsCount.textContent =
+                visibleCards.length +
+                (visibleCards.length === 1 ? " HISTÓRIA" : " HISTÓRIAS");
+
+            emptyState.hidden = visibleCards.length !== 0;
+        }
+
+        searchForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            filterStories();
+
+            document.getElementById("resultados").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        });
+
+        searchInput.addEventListener("input", filterStories);
+        regionFilter.addEventListener("change", filterStories);
+        sortFilter.addEventListener("change", filterStories);
+
+        categoryFilters.querySelectorAll(".filter-chip").forEach(function (button) {
+            button.addEventListener("click", function () {
+                selectedCategory = button.dataset.category;
+
+                categoryFilters.querySelectorAll(".filter-chip").forEach(function (chip) {
+                    chip.classList.toggle("selected", chip === button);
+                });
+
+                filterStories();
+            });
+        });
+
+        function clearFilters() {
+            searchInput.value = "";
+            regionFilter.value = "Todas";
+            sortFilter.value = "recentes";
+            selectedCategory = "Todas";
+
+            categoryFilters.querySelectorAll(".filter-chip").forEach(function (chip) {
+                chip.classList.toggle(
+                    "selected",
+                    chip.dataset.category === "Todas"
+                );
+            });
+
+            filterStories();
+        }
+
+        document.getElementById("clearFilters").addEventListener("click", clearFilters);
+        document.getElementById("emptyClear").addEventListener("click", clearFilters);
+
+        document.getElementById("backToTop").addEventListener("click", function (event) {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        const menuToggle = document.getElementById("menuToggle");
+        const navigation = document.getElementById("navigation");
+
+        menuToggle.addEventListener("click", function () {
+            navigation.classList.toggle("navigation-open");
+        });
+
+        navigation.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navigation.classList.remove("navigation-open");
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const chips = categoryFilters.querySelectorAll(".filter-chip");
+
+const categoriaExiste = Array.from(chips).some(function (chip) {
+    return chip.dataset.category === selectedCategory;
+});
+
+if (!categoriaExiste) {
+    selectedCategory = "Todas";
+}
+
+chips.forEach(function (chip) {
+    chip.classList.toggle(
+        "selected",
+        chip.dataset.category === selectedCategory
+    );
+});
+
+        filterStories();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nova notícia | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/nova_noticia.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <nav>
+            <a href="{% url 'home' %}">Início</a>
+            <a href="{% url 'painel' %}">Painel</a>
+            <a href="{% url 'explorar' %}">Notícias</a>
+
+            {% if request.session.usuario_tipo %}
+                <a href="{% url 'logout' %}" class="logout">Sair ↗</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="logout">Entrar ↗</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <a href="{% url 'painel' %}" class="back-link">← Voltar ao painel</a>
+
+        <section class="intro">
+            <p class="eyebrow">REDAÇÃO · NOSSO SP</p>
+
+            <h1>
+                Uma nova história<br>começa aqui<span>.</span>
+            </h1>
+
+            <p>Compartilhe o que acontece na sua comunidade.</p>
+        </section>
+
+        <div class="editor-layout">
+
+            <form class="editor-form" id="formNoticia" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if erro %}
+                    <p class="form-error">{{ erro }}</p>
+                {% endif %}
+
+                <label for="titulo">Título da notícia</label>
+                <input
+                    id="titulo"
+                    name="titulo"
+                    type="text"
+                    placeholder="Escreva um título que chame a atenção..."
+                    value="{{ dados.titulo|default:'' }}"
+                    maxlength="200"
+                    required
+                >
+
+                <label for="resumo">Resumo</label>
+                <textarea
+                    id="resumo"
+                    name="resumo"
+                    rows="3"
+                    placeholder="Conte em poucas palavras o que aconteceu..."
+                    required
+                >{{ dados.resumo|default:'' }}</textarea>
+
+                <div class="form-row">
+
+                    <div>
+                        <label for="categoria">Categoria</label>
+
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Escolha uma categoria</option>
+
+                            <option value="Cidade" {% if dados.categoria == "Cidade" %}selected{% endif %}>Cidade</option>
+
+                            <option value="Política" {% if dados.categoria == "Política" %}selected{% endif %}>Política</option>
+
+                            <option value="Cultura" {% if dados.categoria == "Cultura" %}selected{% endif %}>Cultura</option>
+
+                            <option value="Esportes" {% if dados.categoria == "Esportes" %}selected{% endif %}>Esportes</option>
+
+                            <option value="Educação" {% if dados.categoria == "Educação" %}selected{% endif %}>Educação</option>
+
+                            <option value="Meio ambiente" {% if dados.categoria == "Meio ambiente" %}selected{% endif %}>Meio ambiente</option>
+
+                            <option value="Segurança" {% if dados.categoria == "Segurança" %}selected{% endif %}>Segurança</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div>
+                        <label for="bairro">Bairro onde aconteceu</label>
+
+                        <input
+                            id="bairro"
+                            name="bairro"
+                            type="text"
+                            placeholder="Ex.: Itaquera"
+                            value="{{ dados.bairro|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label for="rua">Rua / Avenida</label>
+
+                        <input
+                            id="rua"
+                            name="rua"
+                            type="text"
+                            placeholder="Ex.: Avenida Jacu-Pêssego"
+                            value="{{ dados.rua|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <label for="regiao">Região de São Paulo</label>
+
+                <select id="regiao" name="regiao" required>
+                    <option value="">Selecione a região</option>
+
+                    {% for valor, nome in regioes %}
+                        <option
+                            value="{{ valor }}"
+                            {% if dados.regiao == valor %}selected{% endif %}
+                        >
+                            {{ nome }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                <label for="foto">Foto da notícia</label>
+
+                <input
+                    id="foto"
+                    name="foto"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                >
+
+                <img
+                    id="fotoPreview"
+                    class="foto-preview"
+                    alt="Pré-visualização da foto escolhida"
+                    {% if editando and editando.foto %}src="{{ editando.foto.url }}"{% else %}hidden{% endif %}
+                >
+
+                <label for="imagem">Ou use o endereço de uma imagem (opcional)</label>
+
+                <input
+                    id="imagem"
+                    name="imagem"
+                    type="url"
+                    placeholder="Cole o endereço de uma imagem (URL)"
+                    value="{{ dados.imagem|default:'' }}"
+                >
+
+                <label for="conteudo">Conteúdo da notícia</label>
+
+                <textarea
+                    id="conteudo"
+                    name="conteudo"
+                    rows="10"
+                    placeholder="Desenvolva a notícia com os detalhes, informações e contexto..."
+                    required
+                >{{ dados.conteudo|default:'' }}</textarea>
+
+                <label for="tags">Palavras-chave</label>
+
+                <input
+                    id="tags"
+                    name="tags"
+                    type="text"
+                    placeholder="Ex.: comunidade, mobilidade, bairro"
+                    value="{{ dados.tags|default:'' }}"
+                >
+
+                <label for="status">Situação da notícia</label>
+
+                <select id="status" name="status" required>
+
+                    <option
+                        value="rascunho"
+                        {% if not dados or dados.status == "rascunho" %}selected{% endif %}
+                    >
+                        Salvar como rascunho
+                    </option>
+
+                    <option
+                        value="pendente"
+                        {% if dados.status == "pendente" %}selected{% endif %}
+                    >
+                        Enviar para aprovação
+                    </option>
+
+                </select>
+
+                <div class="form-actions">
+
+                    <button type="button" id="limparFormulario" class="secondary-button">
+                        Limpar formulário
+                    </button>
+
+                    <button type="submit" class="primary-button">
+                        Salvar notícia ↗
+                    </button>
+
+                </div>
+
+            </form>
+
+            <aside class="side-note">
+
+                <div class="note-icon">✳</div>
+
+                <p class="eyebrow">ANTES DE ENVIAR</p>
+
+                <h2>Jornalismo próximo das pessoas.</h2>
+
+                <p>
+                    Confira as informações, revise o texto e indique
+                    corretamente onde a notícia aconteceu.
+                </p>
+
+                <div class="tip">
+                    <strong>01 — Seja claro</strong>
+                    <span>Prefira títulos objetivos e informativos.</span>
+                </div>
+
+                <div class="tip">
+                    <strong>02 — Confira os fatos</strong>
+                    <span>Verifique nomes, datas e informações.</span>
+                </div>
+
+                <div class="tip">
+                    <strong>03 — Identifique o local</strong>
+                    <span>Informe o bairro e a rua para que os leitores encontrem a localização da notícia no mapa.</span>
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <script>
+        const campoFoto = document.getElementById("foto");
+        const previaFoto = document.getElementById("fotoPreview");
+
+        campoFoto.addEventListener("change", function () {
+
+            const arquivo = campoFoto.files[0];
+
+            if (!arquivo) {
+                previaFoto.hidden = true;
+                previaFoto.removeAttribute("src");
+                return;
+            }
+
+            if (arquivo.size > 5 * 1024 * 1024) {
+                alert("A imagem deve ter no máximo 5 MB.");
+                campoFoto.value = "";
+                previaFoto.hidden = true;
+                previaFoto.removeAttribute("src");
+                return;
+            }
+
+            previaFoto.src = URL.createObjectURL(arquivo);
+            previaFoto.hidden = false;
+
+        });
+        // Limpar formulário: apaga textos, seleções e imagem, sem enviar
+        document.getElementById("limparFormulario").addEventListener("click", function () {
+            const formulario = document.getElementById("formNoticia");
+
+            formulario.querySelectorAll("input, textarea, select").forEach(function (campo) {
+                if (campo.type === "hidden" || campo.type === "submit" || campo.type === "button") {
+                    return; // mantém o token CSRF
+                }
+
+                if (campo.tagName === "SELECT") {
+                    campo.selectedIndex = 0;
+                } else if (campo.type === "checkbox" || campo.type === "radio") {
+                    campo.checked = false;
+                } else {
+                    campo.value = "";
+                }
+            });
+
+            if (previaFoto.src && previaFoto.src.indexOf("blob:") === 0) {
+                URL.revokeObjectURL(previaFoto.src);
+            }
+
+            previaFoto.hidden = true;
+            previaFoto.removeAttribute("src");
+
+            const erro = formulario.querySelector(".form-error");
+            if (erro) { erro.remove(); }
+
+            document.getElementById("titulo").focus();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,628 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nosso SP — notícias, histórias e acontecimentos dos bairros de São Paulo.">
+    <title>Nosso SP — A cidade não para.</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script>document.documentElement.classList.add("js");</script>
+</head>
+
+<body id="top">
+
+    <div class="topline">
+        <span>JORNALISMO DE PERTO</span>
+        <span class="topline-center">SÃO PAULO, BRASIL</span>
+        <span>FEITO PARA QUEM VIVE A CIDADE</span>
+    </div>
+
+    <header class="header">
+
+        <a href="{% url 'home' %}" class="logo">
+            nosso<span>SP.</span>
+        </a>
+
+        <nav class="navigation">
+            <a href="#ultimas">Notícias</a>
+            <a href="{% url 'explorar' %}">Explorar</a>
+            <a href="#sobre">Sobre nós</a>
+        </nav>
+
+        <div class="header-actions">
+
+            {% if request.session.usuario_tipo %}
+
+                <div class="header-profile" title="{{ request.session.usuario_email }}">
+                    <span class="header-avatar">{{ request.session.usuario_nome|default:"Leitor"|first|upper }}</span>
+                    <span class="header-profile-text">
+                        <strong>{{ request.session.usuario_nome|default:"Leitor" }}</strong>
+                        <small>{{ request.session.usuario_email }}</small>
+                    </span>
+                </div>
+
+                {% if request.session.usuario_tipo == "leitor" %}
+                    <a href="{% url 'portal_leitor' %}" class="header-button header-button-register">
+                        Acessar dashboard
+                    </a>
+                {% elif request.session.usuario_tipo == "jornalista" %}
+                    <a href="{% url 'painel' %}" class="header-button header-button-register">
+                        Acessar dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'administracao' %}" class="header-button header-button-register">
+                        Acessar dashboard
+                    </a>
+                {% endif %}
+
+                <a href="{% url 'logout' %}" class="header-button">
+                    Sair
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'login' %}" class="header-button">
+                    Entrar
+                </a>
+
+                <a href="{% url 'cadastro_leitor' %}" class="header-button header-button-register">
+                    Cadastrar
+                </a>
+
+            {% endif %}
+
+        </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+            ☰
+        </button>
+
+    </header>
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-copy">
+
+                <h1>
+                    A cidade<br>
+                    não para.<br>
+                    <em>A gente</em><br>
+                    <span class="title-highlight">conta.</span>
+                </h1>
+
+                <div class="hero-bottom">
+
+                    <p>
+                        Histórias que acontecem na sua rua,
+                        no seu bairro e em cada canto de São Paulo.
+                    </p>
+
+                    <a href="#ultimas" class="round-link" aria-label="Explorar notícias">
+                        <span>↓</span>
+                    </a>
+
+                </div>
+
+                <div class="hero-index">
+                    <span>NOTÍCIAS QUE TÊM ENDEREÇO.</span>
+                    <span>DESDE AQUI, PARA TODO MUNDO.</span>
+                </div>
+
+            </div>
+
+            <div class="hero-visual">
+
+                <div class="hero-slides" id="heroSlides" aria-roledescription="carrossel" aria-label="Imagens de São Paulo">
+                    <img class="hero-image hero-slide is-active" src="https://images.unsplash.com/photo-1543059080-f9b1272213d5?auto=format&fit=crop&w=1400&q=85" alt="Vista urbana de São Paulo">
+                    <img class="hero-image hero-slide" src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85" alt="Paisagem urbana de São Paulo" loading="lazy">
+                    <img class="hero-image hero-slide" src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=85" alt="Prédios e avenidas de São Paulo" loading="lazy">
+                </div>
+
+                <div class="image-overlay"></div>
+
+                <div class="image-stamp">
+                    <span>SP</span>
+                    <span>É</span>
+                    <span>NOSSO.</span>
+                </div>
+
+                <div class="hero-dots" id="heroDots" aria-hidden="true">
+                    <span class="is-active"></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FAIXA EM MOVIMENTO -->
+
+        <section class="ticker" aria-label="Temas do Nosso SP">
+
+            <div class="ticker-track">
+                <span>NOTÍCIA LOCAL</span>
+                <span class="ticker-star">✳</span>
+
+                <span>VOZES DA CIDADE</span>
+                <span class="ticker-star">✳</span>
+
+                <span>O QUE ACONTECE PERTO</span>
+                <span class="ticker-star">✳</span>
+
+                <span>SÃO PAULO EM MOVIMENTO</span>
+                <span class="ticker-star">✳</span>
+
+                <span>NOTÍCIA LOCAL</span>
+                <span class="ticker-star">✳</span>
+
+                <span>VOZES DA CIDADE</span>
+                <span class="ticker-star">✳</span>
+
+                <span>O QUE ACONTECE PERTO</span>
+                <span class="ticker-star">✳</span>
+
+                <span>SÃO PAULO EM MOVIMENTO</span>
+                <span class="ticker-star">✳</span>
+            </div>
+
+        </section>
+
+        <!-- NOTÍCIAS -->
+
+        <section class="news-section" id="ultimas">
+
+            <div class="section-heading" data-reveal>
+
+                <div>
+                    <span class="section-kicker">FIQUE POR DENTRO</span>
+                    <h2>O que está <em>rolando.</em></h2>
+                </div>
+
+                <a href="{% url 'explorar' %}" class="text-link">
+                    Explore os assuntos
+                </a>
+
+            </div>
+
+            {% if publicacoes %}
+
+                <div class="carousel" id="newsCarousel" data-reveal>
+
+                    <div class="carousel-track" id="carouselTrack">
+
+                        {% for publicacao in publicacoes %}
+
+                            <article class="news-card carousel-slide">
+
+                                <a href="{% url 'noticia' %}?id={{ publicacao.id }}" class="news-image-link">
+
+                                    {% if publicacao.imagem_url %}
+
+                                        <img
+                                            src="{{ publicacao.imagem_url }}"
+                                            alt="{{ publicacao.titulo }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% else %}
+
+                                        <img
+                                            src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1000&q=85"
+                                            alt="Paisagem urbana de São Paulo"
+                                            loading="lazy"
+                                        >
+
+                                    {% endif %}
+
+                                    <span class="category-tag">
+                                        {{ publicacao.categoria }}
+                                    </span>
+
+                                    <span class="card-arrow">↗</span>
+
+                                </a>
+
+                                <div class="news-meta">
+
+                                    <span>
+                                        {{ publicacao.local|default:"SÃO PAULO" }}
+                                        {% if publicacao.regiao %}
+                                            · {{ publicacao.regiao }}
+                                        {% endif %}
+                                    </span>
+
+                                    <span>
+                                        {{ publicacao.data_criacao|date:"d/m/Y" }}
+                                    </span>
+
+                                </div>
+
+                                <h3>
+                                    <a href="{% url 'noticia' %}?id={{ publicacao.id }}">
+                                        {{ publicacao.titulo }}
+                                    </a>
+                                </h3>
+
+                                <p>{{ publicacao.resumo|truncatewords:24 }}</p>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="carousel-controls" id="carouselControls">
+
+                        <button type="button" class="carousel-button" id="carouselPrev" aria-label="Notícia anterior">←</button>
+                        <button type="button" class="carousel-button" id="carouselNext" aria-label="Próxima notícia">→</button>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <p class="news-empty">Nenhuma notícia publicada ainda. Volte em breve!</p>
+
+            {% endif %}
+
+        </section>
+
+        <!-- CATEGORIAS -->
+
+        <section class="explore-section" id="categorias">
+
+            <div class="explore-intro" data-reveal>
+
+                <span class="section-kicker">ESCOLHA SEU OLHAR</span>
+
+                <h2>
+                    São Paulo<br>
+                    por <em>inteiro.</em>
+                </h2>
+
+                <p>
+                    Cada região tem sua própria história.
+                    Qual delas você quer descobrir?
+                </p>
+
+            </div>
+
+            <div class="category-list">
+
+                <a href="{% url 'explorar' %}?categoria=Cidade" class="category-item">
+                    <span class="category-name">Cidade</span>
+                    <span class="category-description">O cotidiano da metrópole</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Política" class="category-item">
+                    <span class="category-name">Política</span>
+                    <span class="category-description">Decisões que impactam a cidade</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Cultura" class="category-item">
+                    <span class="category-name">Cultura</span>
+                    <span class="category-description">Arte, eventos e pessoas</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Esportes" class="category-item">
+                    <span class="category-name">Esportes</span>
+                    <span class="category-description">O esporte na vida paulistana</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Educação" class="category-item">
+                    <span class="category-name">Educação</span>
+                    <span class="category-description">Conhecimento e oportunidades</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Meio%20ambiente" class="category-item">
+                    <span class="category-name">Meio ambiente</span>
+                    <span class="category-description">O futuro dos nossos espaços</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+                <a href="{% url 'explorar' %}?categoria=Segurança" class="category-item">
+                    <span class="category-name">Segurança</span>
+                    <span class="category-description">Informação e cuidado coletivo</span>
+                    <span class="category-arrow">↗</span>
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- SOBRE -->
+
+        <section class="about-section" id="sobre">
+
+            <div class="about-media" data-reveal>
+                <img
+                    src="https://images.unsplash.com/photo-1554168848-228452c09d60?auto=format&fit=crop&w=900&q=85"
+                    alt="São Paulo vista do alto"
+                    loading="lazy"
+                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85';"
+                >
+                <div class="about-mark">
+                    SP<span>✳</span>
+                </div>
+            </div>
+
+            <div class="about-content" data-reveal>
+
+                <span class="section-kicker">QUEM SOMOS NÓS</span>
+
+                <h2>
+                    Um grupo.<br>
+                    <em>Uma cidade inteira.</em>
+                </h2>
+
+                <p>
+                    O Nosso SP é feito por um grupo de pessoas que vive
+                    São Paulo e acredita que as histórias mais importantes
+                    estão na esquina de casa, e não apenas nas grandes manchetes.
+                </p>
+
+                <p>
+                    Nos reunimos para criar um espaço em que jornalistas,
+                    administração e leitores trabalham juntos: quem escreve,
+                    quem revisa e quem lê fazem parte da mesma conversa
+                    sobre os bairros da nossa cidade.
+                </p>
+
+                <div class="about-pillars">
+
+                    <article>
+                        <h3>Quem escreve</h3>
+                        <p>
+                            Jornalistas do grupo apuram, escrevem e enviam
+                            as pautas com foco no bairro e na região.
+                        </p>
+                    </article>
+
+                    <article>
+                        <h3>Quem revisa</h3>
+                        <p>
+                            A administração lê cada notícia antes de
+                            publicar, para manter a informação cuidadosa.
+                        </p>
+                    </article>
+
+                    <article>
+                        <h3>Quem participa</h3>
+                        <p>
+                            Leitores acompanham, salvam notícias e comentam
+                            para manter o diálogo da comunidade ativo.
+                        </p>
+                    </article>
+
+                </div>
+
+                {% if not request.session.usuario_tipo %}
+                    <a href="{% url 'cadastro_leitor' %}" class="about-button">
+                        Faça parte dessa história
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ -->
+
+    <footer class="footer">
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+                <a href="{% url 'home' %}" class="logo footer-logo">
+                    nosso<span>SP.</span>
+                </a>
+
+                <p>
+                    Notícias, histórias e acontecimentos dos bairros
+                    de São Paulo, feitos por quem vive a cidade.
+                </p>
+            </div>
+
+            <nav class="footer-column" aria-label="Navegação do rodapé">
+                <h4>Navegue</h4>
+                <a href="#top">Início</a>
+                <a href="#ultimas">Notícias</a>
+                <a href="{% url 'explorar' %}">Explorar</a>
+                <a href="#sobre">Sobre nós</a>
+            </nav>
+
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <a href="mailto:contato@nossosp.com">contato@nossosp.com</a>
+                <span>São Paulo, SP — Brasil</span>
+                <span>Atendimento de segunda a sexta</span>
+            </div>
+
+            <div class="footer-column">
+                <h4>Sua conta</h4>
+                {% if request.session.usuario_tipo %}
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Entrar</a>
+                    <a href="{% url 'cadastro_leitor' %}">Cadastrar</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 NOSSO SP</span>
+
+            <a
+                href="#top"
+                class="back-top"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;"
+            >
+                VOLTAR AO TOPO ↑
+            </a>
+        </div>
+
+    </footer>
+
+    <!-- MENU MOBILE -->
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const navigation = document.querySelector(".navigation");
+        const header = document.querySelector(".header");
+
+        menuToggle.addEventListener("click", function () {
+            navigation.classList.toggle("navigation-open");
+        });
+
+        navigation.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navigation.classList.remove("navigation-open");
+            });
+        });
+
+        // Cabeçalho fixo: ganha sombra ao rolar a página
+        function atualizarCabecalho() {
+            header.classList.toggle("header-scrolled", window.scrollY > 10);
+        }
+
+        window.addEventListener("scroll", atualizarCabecalho, { passive: true });
+        atualizarCabecalho();
+
+        // Animação de entrada ao rolar
+        const itens = document.querySelectorAll("[data-reveal]");
+
+        if ("IntersectionObserver" in window) {
+            const observador = new IntersectionObserver(function (entradas) {
+                entradas.forEach(function (entrada) {
+                    if (entrada.isIntersecting) {
+                        entrada.target.classList.add("is-visible");
+                        observador.unobserve(entrada.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            itens.forEach(function (item) {
+                observador.observe(item);
+            });
+        } else {
+            itens.forEach(function (item) {
+                item.classList.add("is-visible");
+            });
+        }
+
+        // Carrossel automático da imagem principal
+        (function () {
+            const slides = document.querySelectorAll("#heroSlides .hero-slide");
+            const dots = document.querySelectorAll("#heroDots span");
+
+            if (slides.length < 2) { return; }
+
+            let atual = 0;
+
+            function mostrar(indice) {
+                slides[atual].classList.remove("is-active");
+                dots[atual].classList.remove("is-active");
+                atual = indice;
+                slides[atual].classList.add("is-active");
+                dots[atual].classList.add("is-active");
+            }
+
+            const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (!reduzir) {
+                setInterval(function () {
+                    if (!document.hidden) {
+                        mostrar((atual + 1) % slides.length);
+                    }
+                }, 4500);
+            }
+        })();
+
+        // Carrossel de notícias
+        const trilho = document.getElementById("carouselTrack");
+
+        if (trilho) {
+            const anterior = document.getElementById("carouselPrev");
+            const proximo = document.getElementById("carouselNext");
+            const controles = document.getElementById("carouselControls");
+            let pausado = false;
+
+            function passo() {
+                const slide = trilho.querySelector(".carousel-slide");
+                const espaco = parseFloat(getComputedStyle(trilho).columnGap) || 0;
+                return slide.getBoundingClientRect().width + espaco;
+            }
+
+            function fimDoTrilho() {
+                return trilho.scrollLeft + trilho.clientWidth >= trilho.scrollWidth - 4;
+            }
+
+            function avancar() {
+                if (fimDoTrilho()) {
+                    trilho.scrollTo({ left: 0, behavior: "smooth" });
+                } else {
+                    trilho.scrollBy({ left: passo(), behavior: "smooth" });
+                }
+            }
+
+            function voltar() {
+                if (trilho.scrollLeft <= 4) {
+                    trilho.scrollTo({ left: trilho.scrollWidth, behavior: "smooth" });
+                } else {
+                    trilho.scrollBy({ left: -passo(), behavior: "smooth" });
+                }
+            }
+
+            function atualizarControles() {
+                const cabeTudo = trilho.scrollWidth <= trilho.clientWidth + 4;
+                controles.hidden = cabeTudo;
+            }
+
+            proximo.addEventListener("click", avancar);
+            anterior.addEventListener("click", voltar);
+
+            const carrossel = document.getElementById("newsCarousel");
+            carrossel.addEventListener("mouseenter", function () { pausado = true; });
+            carrossel.addEventListener("mouseleave", function () { pausado = false; });
+            carrossel.addEventListener("focusin", function () { pausado = true; });
+            carrossel.addEventListener("focusout", function () { pausado = false; });
+            carrossel.addEventListener("touchstart", function () { pausado = true; }, { passive: true });
+
+            const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (!reduzirMovimento) {
+                setInterval(function () {
+                    if (!pausado && !document.hidden && trilho.scrollWidth > trilho.clientWidth + 4) {
+                        avancar();
+                    }
+                }, 5000);
+            }
+
+            window.addEventListener("resize", atualizarControles);
+            atualizarControles();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <div class="sidebar-divider"></div>
+
+        <p class="menu-label">ADMINISTRAÇÃO</p>
+
+        <nav class="menu">
+
+            <a href="{% url 'administracao' %}" class="menu-item active">
+                <span class="menu-icon">⌂</span> Início
+            </a>
+
+            <a href="#publicacoes" class="menu-item">
+                <span class="menu-icon">▤</span> Publicações
+            </a>
+
+            <a href="#aprovar" class="menu-item">
+                <span class="menu-icon">✓</span> Aprovar notícias
+            </a>
+
+            <a href="#solicitacoes" class="menu-item">
+                <span class="menu-icon">✎</span> Pedidos de jornalista
+            </a>
+
+            <a href="{% url 'explorar' %}" class="menu-item">
+                <span class="menu-icon">⌕</span> Explorar portal
+            </a>
+
+            <a href="{% url 'logout' %}" class="menu-item sair">
+                <span class="menu-icon">↗</span> Sair
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div>
+                <strong>Nosso SP</strong>
+                <span>Jornalismo independente</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                <a href="{% url 'home' %}">NOSSO SP</a>
+                <span>/</span>
+                <span>ADMINISTRAÇÃO</span>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-details">
+                    <strong>{{ usuario_email }}</strong>
+                    <span>Gestão do portal</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="intro">
+            <div class="intro-content">
+                <p class="eyebrow">CENTRAL ADMINISTRATIVA · NOSSO SP</p>
+
+                <h1>
+                    Informação, organização
+                    <em>e gestão da comunidade.</em>
+                </h1>
+
+                <p class="intro-description">
+                    Aprove ou negue as notícias enviadas pelos jornalistas
+                    e mantenha o portal organizado.
+                </p>
+
+            </div>
+
+            <div class="intro-decoration">
+                <span class="decoration-text">INFORMAÇÃO LOCAL.<br>VOZES REAIS.</span>
+                <span class="decoration-line"></span>
+            </div>
+        </section>
+
+        <section class="welcome-message">
+            <div>
+                <p class="eyebrow">BEM-VINDO DE VOLTA</p>
+                <h2>Olá, administrador. Bem-vindo à gestão.</h2>
+            </div>
+
+            <p>
+                Acompanhe as atividades e contribua para a organização
+                do Nosso SP.
+            </p>
+        </section>
+
+        <section class="stats">
+
+            <article class="stat-card">
+                <span class="stat-label">ACEITAS</span>
+                <strong>{{ total_aceitas|stringformat:"02d" }}</strong>
+                <span class="stat-description">Publicações aceitas</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">NEGADAS</span>
+                <strong>{{ total_negadas|stringformat:"02d" }}</strong>
+                <span class="stat-description">Publicações negadas</span>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">AGUARDANDO</span>
+                <strong>{{ total_pendentes|stringformat:"02d" }}</strong>
+                <span class="stat-description">Notícias para aprovar</span>
+            </article>
+
+        </section>
+
+        <section class="publications" id="aprovar">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">AGUARDANDO DECISÃO</p>
+                    <h2>Aprovar notícias.</h2>
+                    <p class="section-description">
+                        Leia cada notícia enviada pelos jornalistas e decida
+                        se ela será publicada no portal.
+                    </p>
+                </div>
+            </div>
+
+            <div class="publication-list">
+
+                {% for publicacao in pendentes %}
+
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                            </span>
+                            <h3>{{ publicacao.titulo }}</h3>
+                            <span class="publication-date">
+                                {% if publicacao.regiao %}
+                                    {{ publicacao.regiao }}
+                                {% else %}
+                                    Região não informada
+                                {% endif %}
+                                · {{ publicacao.data_criacao|date:"d/m/Y" }}
+                                · {{ publicacao.autor_email|default:"autor não informado" }}
+                            </span>
+                        </div>
+
+                        <span class="publication-status pending">
+                            Aguardando aprovação
+                        </span>
+
+                        <div class="publication-actions">
+
+                            <a href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                               class="publication-arrow"
+                               title="Ler notícia">↗</a>
+
+                            <form action="{% url 'moderar_noticia' publicacao.id 'aprovar' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button action-approve">
+                                    Aprovar
+                                </button>
+                            </form>
+
+                            <form action="{% url 'moderar_noticia' publicacao.id 'negar' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button action-deny">
+                                    Negar
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <p class="section-description">
+                        Nenhuma notícia aguardando aprovação no momento.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+        <section class="publications" id="solicitacoes">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">NOVOS JORNALISTAS</p>
+                    <h2>Pedidos de jornalista.</h2>
+                    <p class="section-description">
+                        Confira os dados e os certificados e, ao liberar,
+                        o perfil do leitor vira jornalista automaticamente.
+                        {% if total_solicitacoes %}
+                            ({{ total_solicitacoes }} em andamento)
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="publication-list">
+
+                {% for s in solicitacoes %}
+                    <article class="solicitacao-item">
+
+                        <div class="solicitacao-topo">
+                            <div>
+                                <h3>{{ s.nome_completo|default:s.leitor.nome }}</h3>
+                                <span class="publication-date">
+                                    {{ s.leitor.email }}
+                                    · enviado em {{ s.data_criacao|date:"d/m/Y" }}
+                                </span>
+                            </div>
+
+                            <span class="publication-status {% if s.status == 'aceita' %}published{% elif s.status == 'recusada' %}denied{% else %}pending{% endif %}">
+                                {{ s.get_status_display }}
+                            </span>
+                        </div>
+
+                        {% if s.cpf %}
+                            <p class="solicitacao-texto"><strong>CPF:</strong> {{ s.cpf }}</p>
+                        {% endif %}
+
+                        {% if s.zona or s.bairro %}
+                            <p class="solicitacao-texto"><strong>Mora em:</strong> {{ s.zona }}{% if s.zona and s.bairro %} · {% endif %}{{ s.bairro }}</p>
+                        {% endif %}
+
+                        <p class="solicitacao-texto"><strong>Habilidades:</strong> {{ s.capacidades|linebreaksbr }}</p>
+
+                        {% if s.experiencia %}
+                            <p class="solicitacao-texto"><strong>Experiência:</strong> {{ s.experiencia|linebreaksbr }}</p>
+                        {% endif %}
+
+                        {% if s.certificados.all %}
+                            <p class="solicitacao-texto"><strong>Certificados:</strong></p>
+                            <div class="solicitacao-certificados">
+                                {% for c in s.certificados.all %}
+                                    <a href="{{ c.imagem.url }}" target="_blank" title="Abrir certificado">
+                                        <img src="{{ c.imagem.url }}" alt="Certificado {{ forloop.counter }}">
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if s.curriculo %}
+                            <p class="solicitacao-texto">
+                                <a href="{{ s.curriculo.url }}" target="_blank" class="cta-link">Abrir currículo <span>↗</span></a>
+                            </p>
+                        {% endif %}
+
+                        {% if s.data_entrevista %}
+                            <p class="solicitacao-texto">
+                                <strong>Entrevista:</strong>
+                                {{ s.data_entrevista|date:"d/m/Y \à\s H:i" }}
+                                {% if s.detalhes_entrevista %}· {{ s.detalhes_entrevista }}{% endif %}
+                            </p>
+                        {% endif %}
+
+                        {% if s.status == 'pendente' or s.status == 'entrevista' %}
+                            <div class="solicitacao-acoes">
+
+                                <form action="{% url 'decidir_solicitacao' s.id 'liberar' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button action-approve">Liberar como jornalista</button>
+                                </form>
+
+                                <form action="{% url 'decidir_solicitacao' s.id 'recusar' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button action-deny">Recusar</button>
+                                </form>
+
+                            </div>
+                        {% endif %}
+
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Nenhum pedido de jornalista recebido até agora.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section class="publications" id="publicacoes">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CONTROLE EDITORIAL</p>
+                    <h2>Controle de publicações.</h2>
+                    <p class="section-description">
+                        Visão geral das notícias enviadas ao Nosso SP.
+                        Consulte o status e gerencie o conteúdo do portal.
+                    </p>
+                </div>
+            </div>
+
+            <div class="publication-list">
+
+                {% for publicacao in publicacoes %}
+                    <article class="publication-item">
+
+                        <div class="publication-number">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </div>
+
+                        <div class="publication-content">
+                            <span class="publication-category">
+                                {{ publicacao.categoria|upper }}
+                            </span>
+
+                            <h3>{{ publicacao.titulo }}</h3>
+
+                            <span class="publication-date">
+                                {% if publicacao.regiao %}
+                                    {{ publicacao.regiao }}
+                                {% else %}
+                                    Região não informada
+                                {% endif %}
+
+                                · {{ publicacao.data_criacao|date:"d/m/Y" }}
+                            </span>
+                        </div>
+
+                        <span class="publication-status {% if publicacao.status == 'publicado' %}published{% elif publicacao.status == 'negado' %}denied{% else %}pending{% endif %}">
+                            {{ publicacao.get_status_display }}
+                        </span>
+
+                        <div class="publication-actions">
+
+                            <a href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                               class="publication-arrow"
+                               title="Visualizar notícia">↗</a>
+
+                            <form
+                                action="{% url 'excluir_noticia' publicacao.id %}"
+                                method="POST"
+                                onsubmit="return confirm('Tem certeza de que deseja excluir esta notícia?');"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="publication-delete"
+                                        title="Excluir notícia">✕</button>
+                            </form>
+
+                        </div>
+                    </article>
+
+                {% empty %}
+                    <p class="section-description">
+                        Ainda não existem notícias enviadas ao portal.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section class="editorial-cta">
+            <div>
+                <p class="eyebrow">QUALIDADE EDITORIAL</p>
+                <h2>
+                    Revise as notícias enviadas
+                    e mantenha o portal confiável.
+                </h2>
+            </div>
+
+            <a href="#aprovar" class="cta-link">
+                Aprovar notícias <span>→</span>
+            </a>
+        </section>
+
+        <footer class="footer">
+            <a href="{% url 'home' %}" class="footer-logo">
+                nosso<span>SP.</span>
+            </a>
+
+            <span>© 2026 Nosso SP</span>
+            <span>Jornalismo feito por e para a comunidade.</span>
+        </footer>
+
+    </main>
+
+</body>
+</html>

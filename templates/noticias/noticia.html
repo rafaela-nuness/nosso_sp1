@@ -1,0 +1,486 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ publicacao.titulo }} | Nosso SP</title>
+
+    <link rel="stylesheet" href="{% static 'css/noticia.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+
+    <header class="cabecalho">
+
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <nav class="menu">
+            <a href="{% url 'home' %}">Início</a>
+            <a href="{% url 'explorar' %}" class="ativo">Notícias</a>
+            <a href="{% url 'home' %}#categorias">Categorias</a>
+            <a href="{% url 'home' %}#sobre">Sobre nós</a>
+        </nav>
+
+        {% if request.session.usuario_tipo == "leitor" %}
+
+            <a href="{% url 'portal_leitor' %}" class="botao-cabecalho">
+                Meu dashboard
+            </a>
+
+        {% elif request.session.usuario_tipo == "jornalista" %}
+
+            <a href="{% url 'painel' %}" class="botao-cabecalho">
+                Meu dashboard
+            </a>
+
+        {% elif request.session.usuario_tipo == "administrador" %}
+
+            <a href="{% url 'administracao' %}" class="botao-cabecalho">
+                Meu dashboard
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'login' %}" class="botao-cabecalho">
+                Entrar
+            </a>
+
+        {% endif %}
+
+    </header>
+
+
+    <main class="pagina-noticia">
+
+        <a href="{% url 'explorar' %}" class="voltar">
+            Voltar para as notícias
+        </a>
+
+
+        <article>
+
+            <div class="cabecalho-noticia">
+
+                <span class="categoria">
+                    {{ publicacao.categoria|upper }}
+                </span>
+
+                <h1>{{ publicacao.titulo }}</h1>
+
+                <p class="resumo">
+                    {{ publicacao.resumo }}
+                </p>
+
+                <div class="informacoes">
+
+                    <div class="avatar">NS</div>
+
+                    <div>
+
+                        <p class="autor">Redação Nosso SP</p>
+
+                        <p class="data">
+
+                            {{ publicacao.data_criacao|date:"d/m/Y" }}
+
+                            {% if publicacao.regiao %}
+                                · {{ publicacao.regiao }}
+                            {% endif %}
+
+                            {% if publicacao.bairro %}
+                                · {{ publicacao.bairro }}
+                            {% elif publicacao.local %}
+                                · {{ publicacao.local }}
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% if publicacao.rua or publicacao.bairro or publicacao.regiao or publicacao.local %}
+
+                    <div class="mapa-jornalista">
+
+                        <p class="mapa-titulo">
+                            LOCALIZAÇÃO INFORMADA PELO JORNALISTA
+                        </p>
+
+                        <div
+                            id="mapa-interativo"
+                            style="height: 380px; width: 100%; border-radius: 8px; border: 1px solid #ddd;"
+                            data-rua="{{ publicacao.rua|default:'' }}"
+                            data-bairro="{{ publicacao.bairro|default:'' }}"
+                            data-regiao="{{ publicacao.regiao|default:'' }}"
+                            data-local="{{ publicacao.local|default:'' }}">
+                        </div>
+
+                        <p id="erro-mapa" style="display: none; margin-top: 10px;">
+                            Não foi possível localizar esse endereço. Confira os dados informados pelo jornalista.
+                        </p>
+
+                        <p class="mapa-endereco">
+                            {% if publicacao.rua %}
+                                {{ publicacao.rua }}
+                            {% endif %}
+
+                            {% if publicacao.bairro %}
+                                {% if publicacao.rua %}, {% endif %}
+                                {{ publicacao.bairro }}
+                            {% elif publicacao.local %}
+                                {% if publicacao.rua %}, {% endif %}
+                                {{ publicacao.local }}
+                            {% endif %}
+
+                            {% if publicacao.regiao %}
+                                · {{ publicacao.regiao }}
+                            {% endif %}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <figure class="imagem-principal">
+
+                {% if publicacao.imagem_url %}
+
+                    <img
+                        src="{{ publicacao.imagem_url }}"
+                        alt="{{ publicacao.titulo }}"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1600&q=85"
+                        alt="Vista urbana de São Paulo"
+                    >
+
+                {% endif %}
+
+                <figcaption>
+
+                    {% if publicacao.regiao %}
+                        {{ publicacao.regiao }}
+                    {% endif %}
+
+                    {% if publicacao.bairro %}
+                        {% if publicacao.regiao %} · {% endif %}
+                        {{ publicacao.bairro }}
+                    {% elif publicacao.local %}
+                        {% if publicacao.regiao %} · {% endif %}
+                        {{ publicacao.local }}
+                    {% endif %}
+
+                    {% if not publicacao.regiao and not publicacao.bairro and not publicacao.local %}
+                        Uma notícia do portal Nosso SP.
+                    {% endif %}
+
+                </figcaption>
+
+            </figure>
+
+
+            {% if leitor_conectado %}
+
+                <form
+                    method="POST"
+                    action="{% url 'alternar_favorito' publicacao.id %}"
+                    class="form-favorito"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="next"
+                        value="{% url 'noticia' %}?id={{ publicacao.id }}"
+                    >
+
+                    <button type="submit" class="botao-favorito">
+
+                        {% if favorita %}
+                            ♥ Remover das notícias salvas
+                        {% else %}
+                            ♡ Salvar notícia
+                        {% endif %}
+
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+
+            <div class="conteudo-noticia">
+                {{ publicacao.conteudo|linebreaks }}
+            </div>
+
+
+            {% if publicacao.tags %}
+
+                <div class="tags-noticia">
+
+                    <strong>ASSUNTOS RELACIONADOS:</strong>
+
+                    <p>{{ publicacao.tags }}</p>
+
+                </div>
+
+            {% endif %}
+
+        </article>
+
+
+        <section class="comentarios">
+
+            <div class="titulo-comentarios">
+
+                <p class="etiqueta">PARTICIPE DA CONVERSA</p>
+
+                <h2>Comentários<span>.</span></h2>
+
+                <p>Compartilhe sua opinião com respeito.</p>
+
+            </div>
+
+
+            {% if comentario_enviado %}
+
+                <p class="mensagem-sucesso">
+                    Seu comentário foi publicado!
+                </p>
+
+            {% endif %}
+
+
+            {% if erro_comentario %}
+
+                <p class="mensagem-erro">
+                    {{ erro_comentario }}
+                </p>
+
+            {% endif %}
+
+
+            {% if pode_comentar %}
+
+                <form class="formulario-comentario" method="POST">
+
+                    {% csrf_token %}
+
+                    <label for="comentario">Seu comentário</label>
+
+                    <textarea
+                        id="comentario"
+                        name="comentario"
+                        rows="4"
+                        placeholder="O que você pensa sobre essa notícia?"
+                        required
+                    ></textarea>
+
+                    <p class="aviso-conta">
+                        Seu comentário será publicado como {{ nome_leitor }}.
+                    </p>
+
+                    <button type="submit" class="botao-comentar">
+                        Enviar comentário
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <p class="aviso-conta">
+
+                    <a href="{% url 'login' %}">
+                        <strong>Entre na sua conta</strong>
+                    </a>
+
+                    ou
+
+                    <a href="{% url 'cadastro_leitor' %}">
+                        <strong>cadastre-se</strong>
+                    </a>
+
+                    para comentar.
+
+                </p>
+
+            {% endif %}
+
+
+            <div class="lista-comentarios">
+
+                <h3>Comentários publicados</h3>
+
+                {% for comentario in comentarios %}
+
+                    <div class="comentario-exemplo">
+
+                        <div class="avatar avatar-claro">
+                            {{ comentario.nome|first|upper }}
+                        </div>
+
+                        <div>
+
+                            <p class="nome-comentario">
+                                {{ comentario.nome }}
+                            </p>
+
+                            <p class="texto-comentario">
+                                {{ comentario.texto|linebreaksbr }}
+                            </p>
+
+                            <small>
+                                {{ comentario.data_criacao|date:"d/m/Y H:i" }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p>
+                        Seja o primeiro a comentar nesta notícia!
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="rodape">
+
+        <a href="{% url 'home' %}" class="logo">
+            nosso<span>SP.</span>
+        </a>
+
+        <p>Informação local. Vozes reais. Uma cidade inteira.</p>
+
+        <span>© 2026 Nosso SP</span>
+
+    </footer>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+
+        const GEOAPIFY_API_KEY = "f73beb4cb8c849f0a2ca9139a6728752";
+
+        const elementoMapa = document.getElementById("mapa-interativo");
+
+        if (elementoMapa) {
+
+            const rua = elementoMapa.dataset.rua;
+            const bairro = elementoMapa.dataset.bairro;
+            const regiao = elementoMapa.dataset.regiao;
+            const local = elementoMapa.dataset.local;
+
+            const endereco = [
+                rua,
+                bairro || (rua ? "" : local),
+                "São Paulo",
+                "SP",
+                "Brasil"
+            ].filter(Boolean).join(", ");
+
+            const mapa = L.map("mapa-interativo").setView(
+                [-23.5505, -46.6333],
+                11
+            );
+
+            L.tileLayer(
+                `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_API_KEY}`,
+                {
+                    maxZoom: 20,
+                    attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | © OpenStreetMap'
+                }
+            ).addTo(mapa);
+
+
+            fetch(
+                `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(endereco)}&filter=countrycode:br&format=json&limit=1&apiKey=${GEOAPIFY_API_KEY}`
+            )
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Erro ao consultar a Geoapify.");
+                }
+
+                return response.json();
+
+            })
+
+            .then(dados => {
+
+                if (dados.results && dados.results.length > 0) {
+
+                    const resultado = dados.results[0];
+
+                    const latitude = resultado.lat;
+                    const longitude = resultado.lon;
+
+                    mapa.setView(
+                        [latitude, longitude],
+                        16
+                    );
+
+                    const marcador = L.marker([
+                        latitude,
+                        longitude
+                    ]).addTo(mapa);
+
+                    marcador.bindPopup(
+                        `<strong>Local da notícia</strong><br>${endereco}`
+                    ).openPopup();
+
+                } else {
+
+                    document.getElementById("erro-mapa").style.display = "block";
+
+                }
+
+            })
+
+            .catch(erro => {
+
+                console.error("Erro no mapa:", erro);
+
+                document.getElementById("erro-mapa").style.display = "block";
+
+            });
+
+            setTimeout(() => {
+                mapa.invalidateSize();
+            }, 300);
+
+        }
+
+    </script>
+
+</body>
+
+</html>

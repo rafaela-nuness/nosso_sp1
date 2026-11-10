@@ -1,0 +1,321 @@
+
+:root {
+    --creme: #F3EBDD;
+    --terracota: #C65D3A;
+    --verde: #343D2E;
+    --amarelo: #E4B85E;
+    --escuro: #262722;
+    --branco: #FBF8F1;
+    --serif: "DM Serif Display", Georgia, serif;
+    --sans: "Manrope", Arial, sans-serif;
+    --linha: rgba(38, 39, 34, 0.18);
+    --cinza: #77776F;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--sans);
+    background-color: var(--creme);
+    color: var(--escuro);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pagina-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+/* PAINEL ESQUERDO */
+
+.painel-esquerdo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 45px 9%;
+    background-color: var(--verde);
+    color: var(--branco);
+}
+
+.logo {
+    width: fit-content;
+    font-family: var(--serif);
+    font-size: 37px;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.logo span {
+    color: var(--amarelo);
+}
+
+.mensagem {
+    max-width: 500px;
+    margin: 60px auto;
+}
+
+.etiqueta {
+    color: var(--terracota);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.painel-esquerdo .etiqueta {
+    color: var(--amarelo);
+}
+
+.mensagem h1 {
+    margin: 25px 0;
+    font-family: var(--serif);
+    font-size: clamp(42px, 4.5vw, 66px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -2px;
+}
+
+.mensagem h1 span {
+    color: var(--amarelo);
+    font-style: italic;
+}
+
+.mensagem > p:last-child {
+    max-width: 380px;
+    color: rgba(255, 253, 248, 0.75);
+    font-size: 13px;
+    line-height: 2;
+}
+
+.rodape-esquerdo {
+    color: rgba(255, 253, 248, 0.6);
+    font-size: 11px;
+}
+
+/* PAINEL DIREITO */
+
+.painel-direito {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 9%;
+    background-color: var(--creme);
+}
+
+.formulario-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 65px;
+    color: var(--cinza);
+    font-size: 12px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.voltar:hover {
+    color: var(--terracota);
+}
+
+.formulario-container h2 {
+    margin-top: 15px;
+    font-family: var(--serif);
+    font-size: clamp(35px, 4vw, 47px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+}
+
+.subtitulo {
+    margin: 13px 0 35px;
+    color: var(--cinza);
+    font-size: 13px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 23px;
+}
+
+.campo label {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.campo input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #D8D0C2;
+    border-radius: 3px;
+    outline: none;
+    background-color: #F8F4EC;
+    color: var(--escuro);
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color 0.2s;
+}
+
+.campo input::placeholder {
+    color: #AAA79F;
+}
+
+.campo input:focus {
+    border-color: var(--terracota);
+}
+
+.botao-entrar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    padding: 17px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: var(--verde);
+    color: var(--creme);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.botao-entrar:hover {
+    background-color: var(--terracota);
+    color: white;
+}
+
+.botao-entrar span {
+    font-size: 20px;
+}
+
+.mensagem-erro {
+    margin-bottom: 15px;
+    color: #B13F32;
+    font-size: 13px;
+}
+
+.link-cadastro {
+    margin-top: 25px;
+    color: var(--cinza);
+    font-size: 12px;
+}
+
+.link-cadastro a {
+    margin-left: 4px;
+    color: var(--terracota);
+    font-weight: 800;
+}
+
+.aviso {
+    margin-top: 28px;
+    color: var(--cinza);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+/* CAMPO DE SENHA COM OLHO */
+
+.campo-senha {
+    position: relative;
+    width: 100%;
+}
+
+.campo-senha input {
+    padding-right: 48px;
+}
+
+.toggle-senha {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #77776D;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.toggle-senha:hover,
+.toggle-senha:focus-visible {
+    background: rgba(198, 93, 58, 0.1);
+    color: #C65D3A;
+    outline: none;
+}
+
+.toggle-senha .olho-fechado {
+    display: none;
+}
+
+.toggle-senha.ativo .olho-aberto {
+    display: none;
+}
+
+.toggle-senha.ativo .olho-fechado {
+    display: block;
+}
+
+/* TELAS MENORES */
+
+@media (max-width: 800px) {
+    .pagina-login {
+        grid-template-columns: 1fr;
+    }
+
+    .painel-esquerdo {
+        min-height: auto;
+        padding: 25px 7%;
+    }
+
+    .mensagem {
+        margin: 55px 0 35px;
+    }
+
+    .mensagem h1 {
+        font-size: 45px;
+    }
+
+    .rodape-esquerdo {
+        display: none;
+    }
+
+    .painel-direito {
+        padding: 45px 7%;
+    }
+
+    .voltar {
+        margin-bottom: 45px;
+    }
+}
+
+@media (max-width: 420px) {
+    .mensagem h1 {
+        font-size: 38px;
+    }
+
+    .formulario-container h2 {
+        font-size: 34px;
+    }
+}
