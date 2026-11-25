@@ -1,0 +1,16 @@
+
+# --- Django ---
+# Gere uma chave nova: python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"
+SECRET_KEY=troque-por-uma-chave-secreta-grande
+DEBUG=True
+# Em produção, informe o domínio do site, separado por vírgula. Ex.: nossosp.com.br,www.nossosp.com.br
+ALLOWED_HOSTS=
+# Em produção (HTTPS). Ex.: https://nossosp.com.br
+CSRF_TRUSTED_ORIGINS=
+
+# --- Supabase (PostgreSQL) ---
+
+DATABASE_URL=postgresql://postgres.esxmrwzpibuipxaxpiom:nossoSP05050@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+
+# --- Mapa da notícia (Geoapify) ---
+GEOAPIFY_API_KEY=f7cf8ab6262a436b8371df2393bc054a

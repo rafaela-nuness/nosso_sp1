@@ -233,12 +233,13 @@
             background: var(--cream);
             position: relative;
             overflow: hidden;
+            isolation: isolate;
         }
 
         .welcome-slides {
             position: absolute;
             inset: 0;
-            z-index: 0;
+            z-index: -2;
         }
 
         .welcome-slide {
@@ -258,20 +259,13 @@
         .welcome-shade {
             position: absolute;
             inset: 0;
-            z-index: 1;
+            z-index: -1;
             background: linear-gradient(
                 90deg,
                 rgba(20, 24, 18, .82) 0%,
                 rgba(20, 24, 18, .55) 60%,
                 rgba(20, 24, 18, .35) 100%
             );
-        }
-
-        .welcome > .eyebrow,
-        .welcome > h1,
-        .welcome > p {
-            position: relative;
-            z-index: 2;
         }
 
         .welcome h1 {
@@ -293,7 +287,7 @@
         .welcome::after {
             content: "SP";
             position: absolute;
-            z-index: 2;
+            z-index: 0;
             right: 35px;
             bottom: -62px;
             font-family: 'DM Serif Display', serif;
@@ -318,17 +312,26 @@
             line-height: 1.12;
             font-weight: 400;
             margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
         }
 
         .welcome h1 span {
-            color: var(--terracotta);
+            color: var(--amber);
         }
 
         .welcome p {
-            color: #66665C;
+            color: #EDEAE0;
             font-size: 13px;
             line-height: 1.8;
             max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome .eyebrow {
+            position: relative;
+            z-index: 1;
         }
 
         /* CATEGORIAS E SEÇÕES */

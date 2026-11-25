@@ -43,6 +43,7 @@
                     {% endif %}
 
                     <label for="titulo">Título da notícia</label>
+
                     <input
                         id="titulo"
                         name="titulo"
@@ -54,6 +55,7 @@
                     >
 
                     <label for="resumo">Resumo</label>
+
                     <textarea
                         id="resumo"
                         name="resumo"
@@ -254,6 +256,8 @@
     <script>
         const campoFoto = document.getElementById("foto");
         const previaFoto = document.getElementById("fotoPreview");
+        const formulario = document.getElementById("formNoticia");
+        const botaoLimpar = document.getElementById("limparFormulario");
 
         campoFoto.addEventListener("change", function () {
 
@@ -273,15 +277,16 @@
                 return;
             }
 
+            if (previaFoto.src && previaFoto.src.indexOf("blob:") === 0) {
+                URL.revokeObjectURL(previaFoto.src);
+            }
+
             previaFoto.src = URL.createObjectURL(arquivo);
             previaFoto.hidden = false;
 
         });
 
-        // Limpar formulário: apaga textos, seleções e imagem, sem enviar
-        document.getElementById("limparFormulario").addEventListener("click", function () {
-
-            const formulario = document.getElementById("formNoticia");
+        botaoLimpar.addEventListener("click", function () {
 
             formulario.querySelectorAll("input, textarea, select").forEach(function (campo) {
 
