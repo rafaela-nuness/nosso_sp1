@@ -1,20 +1,28 @@
 
 import os
+from urllib.parse import quote
 
 from django.contrib.auth.hashers import check_password, make_password
 from django.conf import settings
+from django.http import Http404
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
+
 from .models import (
-    Noticia, Comentario, Leitor, SolicitacaoJornalista,
-    CertificadoSolicitacao
+    Noticia,
+    Comentario,
+    Leitor,
+    SolicitacaoJornalista,
+    CertificadoSolicitacao,
 )
+
 
 EXTENSOES_FOTO = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 TAMANHO_MAXIMO_FOTO = 5 * 1024 * 1024  # 5 MB
+
 EXTENSOES_CURRICULO = {".pdf", ".doc", ".docx"}
 TAMANHO_MAXIMO_CURRICULO = 5 * 1024 * 1024  # 5 MB
 
@@ -34,7 +42,7 @@ SENHA_LEITOR = "Leitor123!"
 def usuario_logado(request):
     return request.session.get("usuario_tipo") in [
         "jornalista",
-        "administrador"
+        "administrador",
     ]
 
 
@@ -66,7 +74,7 @@ def home(request):
     return render(
         request,
         "noticias/home.html",
-        {"publicacoes": publicacoes}
+        {"publicacoes": publicacoes},
     )
 
 
@@ -80,25 +88,34 @@ def login(request):
 
         request.session.flush()
 
-        if email == EMAIL_JORNALISTA and senha == SENHA_JORNALISTA:
+        # LOGIN TEMPORÁRIO DE JORNALISTA
+        if email.lower() == EMAIL_JORNALISTA.lower() and senha == SENHA_JORNALISTA:
             request.session["usuario_tipo"] = "jornalista"
-            request.session["usuario_email"] = email
+            request.session["usuario_email"] = EMAIL_JORNALISTA
             request.session["usuario_nome"] = "João Silva"
+
             return redirect("painel")
 
-        elif email == EMAIL_ADMIN and senha == SENHA_ADMIN:
+        # LOGIN TEMPORÁRIO DE ADMINISTRADOR
+        elif email.lower() == EMAIL_ADMIN.lower() and senha == SENHA_ADMIN:
             request.session["usuario_tipo"] = "administrador"
-            request.session["usuario_email"] = email
+            request.session["usuario_email"] = EMAIL_ADMIN
             request.session["usuario_nome"] = "Administrador"
+
             return redirect("administracao")
 
-        elif email == EMAIL_LEITOR and senha == SENHA_LEITOR:
+        # LOGIN TEMPORÁRIO DE LEITOR
+        elif email.lower() == EMAIL_LEITOR.lower() and senha == SENHA_LEITOR:
             request.session["usuario_tipo"] = "leitor"
-            request.session["usuario_email"] = email
+            request.session["usuario_email"] = EMAIL_LEITOR
             request.session["usuario_nome"] = "Leitor"
+
             return redirect("portal_leitor")
 
-        leitor = Leitor.objects.filter(email__iexact=email).first()
+        # LOGIN DE LEITORES CADASTRADOS NO BANCO
+        leitor = Leitor.objects.filter(
+            email__iexact=email
+        ).first()
 
         if leitor and check_password(senha, leitor.senha):
             iniciar_sessao_leitor(request, leitor)
@@ -113,15 +130,17 @@ def login(request):
     return render(
         request,
         "noticias/login.html",
-        {"erro": erro}
+        {"erro": erro},
     )
 
 
 def iniciar_sessao_leitor(request, leitor):
     request.session.flush()
+
     request.session["usuario_tipo"] = (
         "jornalista" if leitor.jornalista else "leitor"
     )
+
     request.session["usuario_email"] = leitor.email
     request.session["usuario_nome"] = leitor.nome
 
@@ -134,16 +153,21 @@ def logout(request):
 
 # DETALHES DA NOTÍCIA E COMENTÁRIOS
 def noticia(request):
-    publicacao_id = request.GET.get("id")
+    publicacao_id = request.GET.get("id", "")
+
+    if not publicacao_id.isdigit():
+        raise Http404("Notícia não encontrada.")
 
     if eh_administrador(request):
-        # O administrador pode ler qualquer notícia para decidir se aprova.
-        publicacao = get_object_or_404(Noticia, id=publicacao_id)
+        publicacao = get_object_or_404(
+            Noticia,
+            id=publicacao_id,
+        )
     else:
         publicacao = get_object_or_404(
             Noticia,
             id=publicacao_id,
-            status="publicado"
+            status="publicado",
         )
 
     erro_comentario = ""
@@ -159,13 +183,12 @@ def noticia(request):
             erro_comentario = "Escreva seu comentário."
 
         else:
-            # O nome vem sempre da conta; o leitor não digita nome.
             Comentario.objects.create(
                 noticia=publicacao,
                 nome=nome[:100] or "Leitor",
                 autor_email=request.session.get("usuario_email", ""),
                 texto=texto,
-                aprovado=True
+                aprovado=True,
             )
 
             return redirect(
@@ -174,10 +197,25 @@ def noticia(request):
 
     comentarios_publicados = Comentario.objects.filter(
         noticia=publicacao,
-        aprovado=True
+        aprovado=True,
     ).order_by("-data_criacao")
 
     favoritos_ids = request.session.get("favoritos", [])
+
+    google_maps_key = getattr(
+        settings,
+        "GOOGLE_MAPS_API_KEY",
+        "",
+    )
+
+    if google_maps_key == "COLE_SUA_CHAVE_AQUI":
+        google_maps_key = ""
+
+    geoapify_key = getattr(
+        settings,
+        "GEOAPIFY_API_KEY",
+        "",
+    )
 
     return render(
         request,
@@ -187,18 +225,17 @@ def noticia(request):
             "comentarios": comentarios_publicados,
             "erro_comentario": erro_comentario,
             "comentario_enviado": request.GET.get("enviado") == "1",
-            "google_maps_key": (
-                settings.GOOGLE_MAPS_API_KEY
-                if settings.GOOGLE_MAPS_API_KEY != "COLE_SUA_CHAVE_AQUI"
-                else ""
-            ),
+            "google_maps_key": google_maps_key,
+            "geoapify_key": geoapify_key,
             "leitor_conectado": eh_leitor(request),
             "pode_comentar": request.session.get("usuario_tipo") in [
-                "leitor", "jornalista", "administrador"
+                "leitor",
+                "jornalista",
+                "administrador",
             ],
             "favorita": publicacao.id in favoritos_ids,
             "nome_leitor": request.session.get("usuario_nome", ""),
-        }
+        },
     )
 
 
@@ -231,12 +268,12 @@ def painel(request):
             ).count(),
             "usuario_tipo": request.session.get("usuario_tipo"),
             "usuario_email": request.session.get("usuario_email"),
-        }
+        },
     )
 
 
 def validar_foto(arquivo):
-    """Retorna uma mensagem de erro, ou "" se a foto for válida."""
+    """Retorna uma mensagem de erro, ou uma string vazia se a foto for válida."""
     extensao = os.path.splitext(arquivo.name)[1].lower()
 
     if extensao not in EXTENSOES_FOTO:
@@ -256,13 +293,17 @@ def nova_noticia(request):
 # ABRIR E EDITAR RASCUNHO — SOMENTE O JORNALISTA AUTOR
 def editar_noticia(request, id):
     if not eh_jornalista(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     publicacao = get_object_or_404(
         Noticia,
         id=id,
         autor_email=request.session.get("usuario_email", ""),
-        status="rascunho"
+        status="rascunho",
     )
 
     return formulario_noticia(request, publicacao)
@@ -270,7 +311,11 @@ def editar_noticia(request, id):
 
 def formulario_noticia(request, instancia):
     if not eh_jornalista(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     regioes = Noticia.REGIAO_CHOICES
     erro = ""
@@ -279,10 +324,12 @@ def formulario_noticia(request, instancia):
         status = request.POST.get("status", "rascunho")
         regiao = request.POST.get("regiao", "")
 
-        # O jornalista salva rascunho ou envia para aprovação;
-        # quem publica de fato é o administrador.
         if status not in ["rascunho", "pendente"]:
-            status = "pendente" if status == "publicado" else "rascunho"
+            status = (
+                "pendente"
+                if status == "publicado"
+                else "rascunho"
+            )
 
         regioes_validas = [valor for valor, nome in regioes]
 
@@ -302,19 +349,39 @@ def formulario_noticia(request, instancia):
             bairro = request.POST.get("bairro", "").strip()
             rua = request.POST.get("rua", "").strip()
 
-            noticia_salva.titulo = request.POST.get("titulo", "").strip()
-            noticia_salva.resumo = request.POST.get("resumo", "").strip()
-            noticia_salva.categoria = request.POST.get("categoria", "").strip()
+            noticia_salva.titulo = request.POST.get(
+                "titulo", ""
+            ).strip()
+
+            noticia_salva.resumo = request.POST.get(
+                "resumo", ""
+            ).strip()
+
+            noticia_salva.categoria = request.POST.get(
+                "categoria", ""
+            ).strip()
+
             noticia_salva.bairro = bairro
             noticia_salva.rua = rua
-            # "local" resume o endereço nos cards (início, explorar).
+
             noticia_salva.local = ", ".join(
                 parte for parte in [rua, bairro] if parte
             )[:150]
+
             noticia_salva.regiao = regiao
-            noticia_salva.imagem = request.POST.get("imagem", "").strip()
-            noticia_salva.conteudo = request.POST.get("conteudo", "").strip()
-            noticia_salva.tags = request.POST.get("tags", "").strip()
+
+            noticia_salva.imagem = request.POST.get(
+                "imagem", ""
+            ).strip()
+
+            noticia_salva.conteudo = request.POST.get(
+                "conteudo", ""
+            ).strip()
+
+            noticia_salva.tags = request.POST.get(
+                "tags", ""
+            ).strip()
+
             noticia_salva.status = status
 
             if foto:
@@ -330,9 +397,13 @@ def formulario_noticia(request, instancia):
         {
             "regioes": regioes,
             "erro": erro,
-            "dados": request.POST if request.method == "POST" else instancia,
+            "dados": (
+                request.POST
+                if request.method == "POST"
+                else instancia
+            ),
             "editando": instancia,
-        }
+        },
     )
 
 
@@ -340,7 +411,11 @@ def formulario_noticia(request, instancia):
 @require_POST
 def excluir_noticia(request, id):
     if not eh_administrador(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     publicacao = get_object_or_404(Noticia, id=id)
     publicacao.delete()
@@ -352,7 +427,11 @@ def excluir_noticia(request, id):
 @require_POST
 def moderar_noticia(request, id, acao):
     if not eh_administrador(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     publicacao = get_object_or_404(Noticia, id=id)
 
@@ -376,14 +455,18 @@ def explorar(request):
     return render(
         request,
         "noticias/explorar.html",
-        {"publicacoes": publicacoes}
+        {"publicacoes": publicacoes},
     )
 
 
 # PUBLICAÇÕES — JORNALISTA
 def minhas_publicacoes(request):
     if not eh_jornalista(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     publicacoes = Noticia.objects.filter(
         autor_email=request.session.get("usuario_email")
@@ -395,18 +478,28 @@ def minhas_publicacoes(request):
         {
             "publicacoes": publicacoes,
             "total_publicacoes": publicacoes.count(),
-            "total_publicadas": publicacoes.filter(status="publicado").count(),
-            "total_aguardando": publicacoes.filter(status="pendente").count(),
-            "total_rascunhos": publicacoes.filter(status="rascunho").count(),
+            "total_publicadas": publicacoes.filter(
+                status="publicado"
+            ).count(),
+            "total_aguardando": publicacoes.filter(
+                status="pendente"
+            ).count(),
+            "total_rascunhos": publicacoes.filter(
+                status="rascunho"
+            ).count(),
             "usuario_email": request.session.get("usuario_email"),
-        }
+        },
     )
 
 
 # PAINEL DO ADMINISTRADOR
 def administracao(request):
     if not eh_administrador(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
     publicacoes = Noticia.objects.exclude(
         status="rascunho"
@@ -416,7 +509,9 @@ def administracao(request):
 
     solicitacoes = SolicitacaoJornalista.objects.select_related(
         "leitor"
-    ).prefetch_related("certificados").order_by("-data_criacao")
+    ).prefetch_related(
+        "certificados"
+    ).order_by("-data_criacao")
 
     solicitacoes_abertas = solicitacoes.filter(
         status__in=["pendente", "entrevista"]
@@ -430,11 +525,15 @@ def administracao(request):
             "pendentes": pendentes,
             "solicitacoes": solicitacoes,
             "total_solicitacoes": solicitacoes_abertas.count(),
-            "total_aceitas": publicacoes.filter(status="publicado").count(),
-            "total_negadas": publicacoes.filter(status="negado").count(),
+            "total_aceitas": publicacoes.filter(
+                status="publicado"
+            ).count(),
+            "total_negadas": publicacoes.filter(
+                status="negado"
+            ).count(),
             "total_pendentes": pendentes.count(),
             "usuario_email": request.session.get("usuario_email"),
-        }
+        },
     )
 
 
@@ -449,13 +548,10 @@ def cadastro_leitor(request):
         senha = request.POST.get("senha", "")
         confirmar = request.POST.get("confirmar", "")
 
-        dados = {"nome": nome, "email": email}
-
-        emails_reservados = [
-            EMAIL_JORNALISTA.lower(),
-            EMAIL_ADMIN.lower(),
-            EMAIL_LEITOR.lower(),
-        ]
+        dados = {
+            "nome": nome,
+            "email": email,
+        }
 
         if not nome or not email or not senha:
             erro = "Preencha todos os campos."
@@ -469,29 +565,24 @@ def cadastro_leitor(request):
         elif senha != confirmar:
             erro = "As senhas não coincidem."
 
-        elif (
-            email in emails_reservados
-            or Leitor.objects.filter(email__iexact=email).exists()
-        ):
+        elif Leitor.objects.filter(email__iexact=email).exists():
             erro = "Já existe uma conta com este e-mail."
 
         else:
             leitor = Leitor.objects.create(
                 nome=nome,
                 email=email,
-                senha=make_password(senha)
+                senha=make_password(senha),
             )
 
             iniciar_sessao_leitor(request, leitor)
 
-            # Após cadastrar, o leitor vai para a página inicial
-            # já com o perfil e o acesso ao dashboard.
             return redirect("home")
 
     return render(
         request,
         "noticias/cadastro_leitor.html",
-        {"erro": erro, "dados": dados}
+        {"erro": erro, "dados": dados},
     )
 
 
@@ -504,7 +595,6 @@ def portal_leitor(request):
         email__iexact=request.session.get("usuario_email", "")
     ).first()
 
-    # Se o administrador já aceitou o pedido, o perfil vira jornalista.
     if leitor and leitor.jornalista:
         request.session["usuario_tipo"] = "jornalista"
         return redirect("painel")
@@ -512,18 +602,22 @@ def portal_leitor(request):
     solicitacao = None
 
     if leitor:
-        solicitacao = leitor.solicitacoes.order_by("-data_criacao").first()
+        solicitacao = leitor.solicitacoes.order_by(
+            "-data_criacao"
+        ).first()
 
     favoritos_ids = request.session.get("favoritos", [])
 
     noticias_salvas = Noticia.objects.filter(
         id__in=favoritos_ids,
-        status="publicado"
+        status="publicado",
     ).order_by("-data_criacao")
 
     meus_comentarios = Comentario.objects.filter(
         autor_email=request.session.get("usuario_email")
-    ).select_related("noticia").order_by("-data_criacao")
+    ).select_related(
+        "noticia"
+    ).order_by("-data_criacao")
 
     return render(
         request,
@@ -532,14 +626,20 @@ def portal_leitor(request):
             "noticias_salvas": noticias_salvas,
             "favoritos_ids": favoritos_ids,
             "usuario_email": request.session.get("usuario_email"),
-            "usuario_nome": request.session.get("usuario_nome", "Leitor"),
+            "usuario_nome": request.session.get(
+                "usuario_nome", "Leitor"
+            ),
             "meus_comentarios": meus_comentarios,
             "conta_cadastrada": leitor is not None,
             "solicitacao": solicitacao,
-            "erro_solicitacao": request.GET.get("erro_solicitacao", ""),
-            "solicitacao_enviada": request.GET.get("solicitacao") == "1",
+            "erro_solicitacao": request.GET.get(
+                "erro_solicitacao", ""
+            ),
+            "solicitacao_enviada": (
+                request.GET.get("solicitacao") == "1"
+            ),
             "regioes": Noticia.REGIAO_CHOICES,
-        }
+        },
     )
 
 
@@ -554,7 +654,6 @@ def solicitar_jornalista(request):
     ).first()
 
     def voltar_com_erro(mensagem):
-        from urllib.parse import quote
         return redirect(
             f"/leitor/?erro_solicitacao={quote(mensagem)}#jornalista"
         )
@@ -567,9 +666,14 @@ def solicitar_jornalista(request):
     if leitor.solicitacoes.filter(
         status__in=["pendente", "entrevista"]
     ).exists():
-        return voltar_com_erro("Você já tem uma solicitação em andamento.")
+        return voltar_com_erro(
+            "Você já tem uma solicitação em andamento."
+        )
 
-    nome_completo = request.POST.get("nome_completo", "").strip()
+    nome_completo = request.POST.get(
+        "nome_completo", ""
+    ).strip()
+
     cpf = request.POST.get("cpf", "").strip()
     zona = request.POST.get("zona", "").strip()
     bairro = request.POST.get("bairro", "").strip()
@@ -582,8 +686,12 @@ def solicitar_jornalista(request):
     if not cpf_valido(cpf):
         return voltar_com_erro("Informe um CPF válido.")
 
-    if zona not in [valor for valor, nome in Noticia.REGIAO_CHOICES]:
-        return voltar_com_erro("Escolha a zona onde você mora.")
+    if zona not in [
+        valor for valor, nome in Noticia.REGIAO_CHOICES
+    ]:
+        return voltar_com_erro(
+            "Escolha a zona onde você mora."
+        )
 
     if not bairro:
         return voltar_com_erro("Informe o bairro onde você mora.")
@@ -592,19 +700,29 @@ def solicitar_jornalista(request):
         return voltar_com_erro("Descreva suas habilidades.")
 
     if not certificados:
-        return voltar_com_erro("Anexe pelo menos uma foto de certificado.")
+        return voltar_com_erro(
+            "Anexe pelo menos uma foto de certificado."
+        )
 
     if len(certificados) > 10:
-        return voltar_com_erro("Envie no máximo 10 certificados.")
+        return voltar_com_erro(
+            "Envie no máximo 10 certificados."
+        )
 
     for arquivo in certificados:
         erro_foto = validar_foto(arquivo)
 
         if erro_foto:
-            return voltar_com_erro(f"Certificado inválido: {erro_foto}")
+            return voltar_com_erro(
+                f"Certificado inválido: {erro_foto}"
+            )
 
     digitos = "".join(c for c in cpf if c.isdigit())
-    cpf_formatado = f"{digitos[:3]}.{digitos[3:6]}.{digitos[6:9]}-{digitos[9:]}"
+
+    cpf_formatado = (
+        f"{digitos[:3]}.{digitos[3:6]}."
+        f"{digitos[6:9]}-{digitos[9:]}"
+    )
 
     solicitacao = SolicitacaoJornalista.objects.create(
         leitor=leitor,
@@ -612,13 +730,13 @@ def solicitar_jornalista(request):
         cpf=cpf_formatado,
         zona=zona,
         bairro=bairro[:100],
-        capacidades=habilidades
+        capacidades=habilidades,
     )
 
     for arquivo in certificados:
         CertificadoSolicitacao.objects.create(
             solicitacao=solicitacao,
-            imagem=arquivo
+            imagem=arquivo,
         )
 
     return redirect("/leitor/?solicitacao=1#jornalista")
@@ -632,8 +750,10 @@ def cpf_valido(cpf):
 
     for tamanho in (9, 10):
         soma = sum(
-            digitos[i] * (tamanho + 1 - i) for i in range(tamanho)
+            digitos[i] * (tamanho + 1 - i)
+            for i in range(tamanho)
         )
+
         digito = (soma * 10) % 11 % 10
 
         if digito != digitos[tamanho]:
@@ -646,34 +766,45 @@ def cpf_valido(cpf):
 @require_POST
 def decidir_solicitacao(request, id, acao):
     if not eh_administrador(request):
-        return redirecionar_painel(request) if usuario_logado(request) else redirect("login")
+        return (
+            redirecionar_painel(request)
+            if usuario_logado(request)
+            else redirect("login")
+        )
 
-    solicitacao = get_object_or_404(SolicitacaoJornalista, id=id)
+    solicitacao = get_object_or_404(
+        SolicitacaoJornalista,
+        id=id,
+    )
 
     if solicitacao.status in ["aceita", "recusada"]:
         return redirect("/administracao/#solicitacoes")
 
     if acao == "entrevista":
-        data = parse_datetime(request.POST.get("data_entrevista", ""))
+        data = parse_datetime(
+            request.POST.get("data_entrevista", "")
+        )
 
         if data:
             if timezone.is_naive(data):
                 data = timezone.make_aware(data)
 
             solicitacao.data_entrevista = data
+
             solicitacao.detalhes_entrevista = request.POST.get(
                 "detalhes_entrevista", ""
             ).strip()[:250]
+
             solicitacao.status = "entrevista"
             solicitacao.save()
 
     elif acao in ["liberar", "aceitar"] and solicitacao.status in [
-        "pendente", "entrevista"
+        "pendente",
+        "entrevista",
     ]:
         solicitacao.status = "aceita"
         solicitacao.save()
 
-        # O perfil vira jornalista automaticamente.
         solicitacao.leitor.jornalista = True
         solicitacao.leitor.save()
 
@@ -693,7 +824,7 @@ def alternar_favorito(request, id):
     get_object_or_404(
         Noticia,
         id=id,
-        status="publicado"
+        status="publicado",
     )
 
     favoritos = request.session.get("favoritos", [])
@@ -709,7 +840,7 @@ def alternar_favorito(request, id):
 
     if destino and url_has_allowed_host_and_scheme(
         destino,
-        allowed_hosts={request.get_host()}
+        allowed_hosts={request.get_host()},
     ):
         return redirect(destino)
 

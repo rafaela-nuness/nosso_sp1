@@ -1,6 +1,12 @@
-
 from django.contrib import admin
-from .models import Noticia, Comentario, Leitor, SolicitacaoJornalista
+
+from .models import (
+    Noticia,
+    Comentario,
+    Leitor,
+    SolicitacaoJornalista,
+    CertificadoSolicitacao,
+)
 
 
 @admin.register(Noticia)
@@ -26,5 +32,17 @@ class LeitorAdmin(admin.ModelAdmin):
 
 @admin.register(SolicitacaoJornalista)
 class SolicitacaoJornalistaAdmin(admin.ModelAdmin):
-    list_display = ("nome_completo", "leitor", "zona", "bairro", "status", "data_criacao")
+    list_display = (
+        "nome_completo",
+        "leitor",
+        "zona",
+        "bairro",
+        "status",
+        "data_criacao",
+    )
     list_filter = ("status",)
+
+
+@admin.register(CertificadoSolicitacao)
+class CertificadoSolicitacaoAdmin(admin.ModelAdmin):
+    list_display = ("solicitacao", "imagem")
