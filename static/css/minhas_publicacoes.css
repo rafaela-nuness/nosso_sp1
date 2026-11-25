@@ -1,4 +1,4 @@
-
+﻿
 :root {
     --cream: #F3EBDD;
     --terracotta: #C65D3A;
@@ -28,7 +28,8 @@ a {
     color: inherit;
 }
 
-button, input {
+button,
+input {
     font: inherit;
 }
 
@@ -84,25 +85,6 @@ button, input {
 .menu {
     display: flex;
     flex-direction: column;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    gap: 9px;
-}
-
-.menu-item {
-    padding: 14px 13px;
-    border-radius: 7px;
-    color: #D4D7CA;
-    font-size: 12px;
-    transition: 0.2s;
-}
-
-.menu-item span {
-    color: var(--amber);
-    margin-right: 7px;
-=======
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
     gap: 7px;
 }
 
@@ -126,45 +108,22 @@ button, input {
     font-size: 17px;
     font-weight: 700;
     text-align: center;
-<<<<<<< HEAD
-=======
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
 }
 
 .menu-item:hover,
 .menu-item.active {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    background: #46503D;
-=======
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
     background: rgba(243, 235, 221, 0.13);
     color: var(--amber);
 }
 
 .menu-item:hover span,
 .menu-item.active span {
-<<<<<<< HEAD
-=======
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
     color: var(--amber);
 }
 
 .menu-item.sair {
-<<<<<<< HEAD
     margin-top: 22px;
     color: #FFFFFF;
-=======
-<<<<<<< HEAD
-    margin-top: 15px;
-=======
-    margin-top: 22px;
-    color: #FFFFFF;
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
 }
 
 .sidebar-bottom {

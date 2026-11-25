@@ -1,4 +1,4 @@
-
+﻿
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -233,18 +233,13 @@
             background: var(--cream);
             position: relative;
             overflow: hidden;
+            isolation: isolate;
         }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-        .welcome::after {
-=======
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
         .welcome-slides {
             position: absolute;
             inset: 0;
-            z-index: 0;
+            z-index: -2;
         }
 
         .welcome-slide {
@@ -264,30 +259,35 @@
         .welcome-shade {
             position: absolute;
             inset: 0;
-            z-index: 1;
-            background: linear-gradient(90deg, rgba(20, 24, 18, .82) 0%, rgba(20, 24, 18, .55) 60%, rgba(20, 24, 18, .35) 100%);
+            z-index: -1;
+            background: linear-gradient(
+                90deg,
+                rgba(20, 24, 18, .82) 0%,
+                rgba(20, 24, 18, .55) 60%,
+                rgba(20, 24, 18, .35) 100%
+            );
         }
 
-        .welcome > .eyebrow,
-        .welcome > h1,
-        .welcome > p {
-            position: relative;
-            z-index: 2;
+        .welcome h1 {
+            color: #fff;
         }
 
-        .welcome h1 { color: #fff; }
-        .welcome h1 span { color: var(--amber); }
-        .welcome p { color: #EDEAE0; }
-        .welcome .eyebrow { color: var(--amber); }
+        .welcome h1 span {
+            color: var(--amber);
+        }
+
+        .welcome p {
+            color: #EDEAE0;
+        }
+
+        .welcome .eyebrow {
+            color: var(--amber);
+        }
 
         .welcome::after {
-            z-index: 2;
-<<<<<<< HEAD
-=======
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
             content: "SP";
             position: absolute;
+            z-index: 0;
             right: 35px;
             bottom: -62px;
             font-family: 'DM Serif Display', serif;
@@ -312,17 +312,26 @@
             line-height: 1.12;
             font-weight: 400;
             margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
         }
 
         .welcome h1 span {
-            color: var(--terracotta);
+            color: var(--amber);
         }
 
         .welcome p {
-            color: #66665C;
+            color: #EDEAE0;
             font-size: 13px;
             line-height: 1.8;
             max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome .eyebrow {
+            position: relative;
+            z-index: 1;
         }
 
         /* CATEGORIAS E SEÇÕES */
@@ -774,33 +783,33 @@
 
         <div class="brand">
             <a href="{% url 'home' %}" class="brand-name">Nosso <span>SP.</span></a>
-                    </div>
+        </div>
 
         <div class="menu-label">Área do leitor</div>
 
         <nav class="menu">
             <a href="{% url 'home' %}">
-                <span class="menu-icon">⌂</span>
+                <span class="menu-icon">🏠</span>
                 Início
             </a>
 
             <a href="{% url 'explorar' %}">
-                <span class="menu-icon">⌕</span>
+                <span class="menu-icon">🔎</span>
                 Explorar notícias
             </a>
 
             <a href="#inicio" class="active">
-                <span class="menu-icon">▦</span>
+                <span class="menu-icon">▣</span>
                 Meu painel
             </a>
 
             <a href="#salvos">
-                <span class="menu-icon">♡</span>
+                <span class="menu-icon">♥</span>
                 Notícias salvas
             </a>
 
             <a href="#comentarios">
-                <span class="menu-icon">▤</span>
+                <span class="menu-icon">💬</span>
                 Meus comentários
             </a>
 
@@ -825,12 +834,11 @@
             </div>
 
             <a href="{% url 'logout' %}" class="logout">
-                ↗ &nbsp; Sair da conta
+                ↪ &nbsp; Sair da conta
             </a>
         </div>
 
     </aside>
-
 
     <main class="main" id="inicio">
 
@@ -845,24 +853,16 @@
             </div>
         </header>
 
-
         <section class="welcome">
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
+
             <div class="welcome-slides" id="welcomeSlides" aria-hidden="true">
                 <img class="welcome-slide is-active" src="https://images.unsplash.com/photo-1543059080-f9b1272213d5?auto=format&fit=crop&w=1400&q=85" alt="">
                 <img class="welcome-slide" src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85" alt="" loading="lazy">
                 <img class="welcome-slide" src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=85" alt="" loading="lazy">
             </div>
+
             <div class="welcome-shade"></div>
 
-<<<<<<< HEAD
-=======
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
             <div class="eyebrow">Sua cidade. Sua informação.</div>
 
             <h1>
@@ -875,8 +875,8 @@
                 e fique por dentro das notícias que fazem parte da vida
                 da nossa cidade.
             </p>
-        </section>
 
+        </section>
 
         <!-- NOTÍCIAS SALVAS -->
         <section class="news-section" id="salvos">
@@ -952,7 +952,7 @@
 
                     <div class="empty-state">
                         <h3>Você ainda não salvou notícias.</h3>
-                        <p>Abra uma notícia e clique em “Salvar notícia” para guardá-la aqui.</p>
+                        <p>Abra uma notícia e clique em "Salvar notícia" para guardá-la aqui.</p>
                         <a href="{% url 'explorar' %}" class="see-all">Explorar notícias →</a>
                     </div>
 
@@ -962,230 +962,298 @@
 
         </section>
 
+        <!-- MEUS COMENTÁRIOS -->
+        <section class="news-section" id="comentarios">
 
-       
-<!-- MEUS COMENTÁRIOS -->
-<section class="news-section" id="comentarios">
-
-    <div class="section-heading">
-        <div>
-            <h2>Meus comentários</h2>
-            <p>Acompanhe suas participações nas notícias do Nosso SP.</p>
-        </div>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:14px;">
-
-        {% for comentario in meus_comentarios %}
-
-            <article style="
-                background:white;
-                border:1px solid var(--line);
-                border-radius:11px;
-                padding:22px;
-            ">
-
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    gap:12px;
-                    flex-wrap:wrap;
-                    margin-bottom:12px;
-                ">
-
-                    <span class="news-category">
-                        {{ comentario.noticia.categoria }}
-                    </span>
-
-                    {% if comentario.aprovado %}
-                        <span style="
-                            color:#343D2E;
-                            background:#E8EEE4;
-                            padding:6px 11px;
-                            border-radius:20px;
-                            font-size:10px;
-                            font-weight:800;
-                        ">
-                            APROVADO
-                        </span>
-                    {% else %}
-                        <span style="
-                            color:#956A1D;
-                            background:#F8EFD9;
-                            padding:6px 11px;
-                            border-radius:20px;
-                            font-size:10px;
-                            font-weight:800;
-                        ">
-                            AGUARDANDO APROVAÇÃO
-                        </span>
-                    {% endif %}
-
+            <div class="section-heading">
+                <div>
+                    <h2>Meus comentários</h2>
+                    <p>Acompanhe suas participações nas notícias do Nosso SP.</p>
                 </div>
-
-                <h3 style="
-                    font-family:'DM Serif Display',serif;
-                    font-size:21px;
-                    font-weight:400;
-                    margin-bottom:10px;
-                ">
-                    {{ comentario.noticia.titulo }}
-                </h3>
-
-                <p style="
-                    color:#66665C;
-                    font-size:13px;
-                    line-height:1.8;
-                    margin-bottom:15px;
-                ">
-                    {{ comentario.texto|linebreaksbr }}
-                </p>
-
-                <div style="
-                    border-top:1px solid var(--line);
-                    padding-top:12px;
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Enviado em {{ comentario.data_criacao|date:"d/m/Y às H:i" }}
-                </div>
-
-            </article>
-
-        {% empty %}
-
-            <div class="empty-state">
-                <h3>Você ainda não comentou.</h3>
-                <p>Participe das conversas nas notícias do Nosso SP.</p>
             </div>
 
-        {% endfor %}
+            <div style="display:flex; flex-direction:column; gap:14px;">
 
-    </div>
+                {% for comentario in meus_comentarios %}
 
-</section>
+                    <article style="
+                        background:white;
+                        border:1px solid var(--line);
+                        border-radius:11px;
+                        padding:22px;
+                    ">
 
-<!-- MEU PERFIL -->
-<section class="news-section" id="perfil">
-    <div class="section-heading">
-        <div>
-            <h2>Meu perfil</h2>
-            <p>Os dados da sua conta no Nosso SP.</p>
-        </div>
-    </div>
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:12px;
+                            flex-wrap:wrap;
+                            margin-bottom:12px;
+                        ">
 
-    <div class="profile-card">
-        <div class="profile-avatar">{{ usuario_nome|first|upper }}</div>
+                            <span class="news-category">
+                                {{ comentario.noticia.categoria }}
+                            </span>
 
-        <div class="profile-info">
-            <strong>{{ usuario_nome }}</strong>
-            <span>{{ usuario_email }}</span>
-            <small>Conta de leitor</small>
-        </div>
+                            {% if comentario.aprovado %}
+                                <span style="
+                                    color:#343D2E;
+                                    background:#E8EEE4;
+                                    padding:6px 11px;
+                                    border-radius:20px;
+                                    font-size:10px;
+                                    font-weight:800;
+                                ">
+                                    APROVADO
+                                </span>
+                            {% else %}
+                                <span style="
+                                    color:#956A1D;
+                                    background:#F8EFD9;
+                                    padding:6px 11px;
+                                    border-radius:20px;
+                                    font-size:10px;
+                                    font-weight:800;
+                                ">
+                                    AGUARDANDO APROVAÇÃO
+                                </span>
+                            {% endif %}
 
-        <div class="profile-actions">
-            <a href="{% url 'home' %}" class="profile-button">Ir para a página inicial</a>
-            <a href="{% url 'explorar' %}" class="profile-button profile-button-outline">Explorar notícias</a>
-        </div>
-    </div>
-</section>
+                        </div>
 
+                        <h3 style="
+                            font-family:'DM Serif Display',serif;
+                            font-size:21px;
+                            font-weight:400;
+                            margin-bottom:10px;
+                        ">
+                            {{ comentario.noticia.titulo }}
+                        </h3>
 
+                        <p style="
+                            color:#66665C;
+                            font-size:13px;
+                            line-height:1.8;
+                            margin-bottom:15px;
+                        ">
+                            {{ comentario.texto|linebreaksbr }}
+                        </p>
 
-<!-- SER JORNALISTA -->
-<section class="news-section" id="jornalista">
-    <div class="section-heading">
-        <div>
-            <h2>Quero ser jornalista</h2>
-            <p>Envie seus dados, certificados e habilidades para a nossa equipe avaliar.</p>
-        </div>
-    </div>
+                        <div style="
+                            border-top:1px solid var(--line);
+                            padding-top:12px;
+                            color:var(--muted);
+                            font-size:10px;
+                        ">
+                            Enviado em {{ comentario.data_criacao|date:"d/m/Y às H:i" }}
+                        </div>
 
-    <div class="request-box">
+                    </article>
 
-        {% if solicitacao_enviada %}
-            <p class="request-msg">Solicitação enviada! Em breve nossa equipe entra em contato.</p>
-        {% endif %}
+                {% empty %}
 
-        {% if erro_solicitacao %}
-            <p class="request-msg request-error">{{ erro_solicitacao }}</p>
-        {% endif %}
+                    <div class="empty-state">
+                        <h3>Você ainda não comentou.</h3>
+                        <p>Participe das conversas nas notícias do Nosso SP.</p>
+                    </div>
 
-        {% if solicitacao and solicitacao.status == 'pendente' %}
-            <p>Seu pedido está <strong>aguardando análise</strong>. Assim que o administrador liberar, sua conta passa a ser de jornalista.</p>
+                {% endfor %}
 
-        {% elif solicitacao and solicitacao.status == 'entrevista' %}
-            <p>
-                Sua <strong>entrevista foi marcada</strong> para
-                <strong>{{ solicitacao.data_entrevista|date:"d/m/Y \à\s H:i" }}</strong>{% if solicitacao.detalhes_entrevista %} — {{ solicitacao.detalhes_entrevista }}{% endif %}.
-            </p>
+            </div>
 
-        {% elif not conta_cadastrada %}
-            <p>Para pedir autorização, entre com uma conta de leitor cadastrada no Nosso SP.</p>
+        </section>
 
-        {% else %}
-            {% if solicitacao and solicitacao.status == 'recusada' %}
-                <p class="request-msg">Seu pedido anterior não foi aceito. Você pode enviar um novo.</p>
-            {% endif %}
+        <!-- MEU PERFIL -->
+        <section class="news-section" id="perfil">
 
-            <button type="button" class="profile-button" id="abrirFormJornalista" {% if erro_solicitacao %}hidden{% endif %}>
-                Quero ser jornalista
-            </button>
+            <div class="section-heading">
+                <div>
+                    <h2>Meu perfil</h2>
+                    <p>Os dados da sua conta no Nosso SP.</p>
+                </div>
+            </div>
 
-            <form id="formJornalista" method="POST" action="{% url 'solicitar_jornalista' %}" enctype="multipart/form-data" {% if not erro_solicitacao %}hidden{% endif %}>
-                {% csrf_token %}
+            <div class="profile-card">
 
-                <label for="nome_completo">Nome completo *</label>
-                <input type="text" id="nome_completo" name="nome_completo" maxlength="150" required>
+                <div class="profile-avatar">{{ usuario_nome|first|upper }}</div>
 
-                <label for="cpf">CPF *</label>
-                <input type="text" id="cpf" name="cpf" maxlength="14" inputmode="numeric" placeholder="000.000.000-00" required>
+                <div class="profile-info">
+                    <strong>{{ usuario_nome }}</strong>
+                    <span>{{ usuario_email }}</span>
+                    <small>Conta de leitor</small>
+                </div>
 
-                <label for="zona">Zona onde mora *</label>
-                <select id="zona" name="zona" required>
-                    <option value="">Selecione a zona</option>
-                    {% for valor, nome in regioes %}
-                        <option value="{{ valor }}">{{ nome }}</option>
-                    {% endfor %}
-                </select>
+                <div class="profile-actions">
+                    <a href="{% url 'home' %}" class="profile-button">Ir para a página inicial</a>
+                    <a href="{% url 'explorar' %}" class="profile-button profile-button-outline">Explorar notícias</a>
+                </div>
 
-                <label for="bairro">Bairro onde mora *</label>
-                <input type="text" id="bairro" name="bairro" maxlength="100" required>
+            </div>
 
-                <label for="certificados">Certificados (fotos JPG, PNG, WEBP ou GIF, até 5 MB cada) *</label>
-                <input type="file" id="certificados" name="certificados" accept="image/jpeg,image/png,image/webp,image/gif" multiple required>
+        </section>
 
-                <label for="capacidades">Suas habilidades *</label>
-                <textarea id="capacidades" name="capacidades" rows="4" required placeholder="Ex.: apuração, redação, fotografia, cobertura de bairros..."></textarea>
+        <!-- SER JORNALISTA -->
+        <section class="news-section" id="jornalista">
 
-                <button type="submit" class="profile-button">Enviar solicitação</button>
-            </form>
+            <div class="section-heading">
+                <div>
+                    <h2>Quero ser jornalista</h2>
+                    <p>Envie seus dados, certificados e habilidades para a nossa equipe avaliar.</p>
+                </div>
+            </div>
 
-            <script>
-                (function () {
-                    var botao = document.getElementById("abrirFormJornalista");
-                    var form = document.getElementById("formJornalista");
-                    var cpf = document.getElementById("cpf");
+            <div class="request-box">
 
-                    botao.addEventListener("click", function () {
-                        form.hidden = false;
-                        botao.hidden = true;
-                        form.scrollIntoView({ behavior: "smooth", block: "start" });
-                    });
+                {% if solicitacao_enviada %}
+                    <p class="request-msg">Solicitação enviada! Em breve nossa equipe entra em contato.</p>
+                {% endif %}
 
-                    cpf.addEventListener("input", function () {
-                        var d = cpf.value.replace(/\D/g, "").slice(0, 11);
-                        cpf.value = d
-                            .replace(/(\d{3})(\d)/, "$1.$2")
-                            .replace(/(\d{3})(\d)/, "$1.$2")
-                            .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-                    });
-                })();
-            </script>
-        {% endif %}
-    </div>
-</section>
+                {% if erro_solicitacao %}
+                    <p class="request-msg request-error">{{ erro_solicitacao }}</p>
+                {% endif %}
+
+                {% if solicitacao and solicitacao.status == 'pendente' %}
+
+                    <p>
+                        Seu pedido está <strong>aguardando análise</strong>.
+                        Assim que o administrador liberar, sua conta passa a ser de jornalista.
+                    </p>
+
+                {% elif solicitacao and solicitacao.status == 'entrevista' %}
+
+                    <p>
+                        Sua <strong>entrevista foi marcada</strong> para
+                        <strong>{{ solicitacao.data_entrevista|date:"d/m/Y às H:i" }}</strong>{% if solicitacao.detalhes_entrevista %} — {{ solicitacao.detalhes_entrevista }}{% endif %}.
+                    </p>
+
+                {% elif not conta_cadastrada %}
+
+                    <p>Para pedir autorização, entre com uma conta de leitor cadastrada no Nosso SP.</p>
+
+                {% else %}
+
+                    {% if solicitacao and solicitacao.status == 'recusada' %}
+                        <p class="request-msg">Seu pedido anterior não foi aceito. Você pode enviar um novo.</p>
+                    {% endif %}
+
+                    <button
+                        type="button"
+                        class="profile-button"
+                        id="abrirFormJornalista"
+                        {% if erro_solicitacao %}hidden{% endif %}
+                    >
+                        Quero ser jornalista
+                    </button>
+
+                    <form
+                        id="formJornalista"
+                        method="POST"
+                        action="{% url 'solicitar_jornalista' %}"
+                        enctype="multipart/form-data"
+                        {% if not erro_solicitacao %}hidden{% endif %}
+                    >
+                        {% csrf_token %}
+
+                        <label for="nome_completo">Nome completo *</label>
+                        <input
+                            type="text"
+                            id="nome_completo"
+                            name="nome_completo"
+                            maxlength="150"
+                            required
+                        >
+
+                        <label for="cpf">CPF *</label>
+                        <input
+                            type="text"
+                            id="cpf"
+                            name="cpf"
+                            maxlength="14"
+                            inputmode="numeric"
+                            placeholder="000.000.000-00"
+                            required
+                        >
+
+                        <label for="zona">Zona onde mora *</label>
+                        <select id="zona" name="zona" required>
+                            <option value="">Selecione a zona</option>
+
+                            {% for valor, nome in regioes %}
+                                <option value="{{ valor }}">{{ nome }}</option>
+                            {% endfor %}
+
+                        </select>
+
+                        <label for="bairro">Bairro onde mora *</label>
+                        <input
+                            type="text"
+                            id="bairro"
+                            name="bairro"
+                            maxlength="100"
+                            required
+                        >
+
+                        <label for="certificados">Certificados (fotos JPG, PNG, WEBP ou GIF, até 5 MB cada) *</label>
+                        <input
+                            type="file"
+                            id="certificados"
+                            name="certificados"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            multiple
+                            required
+                        >
+
+                        <label for="capacidades">Suas habilidades *</label>
+                        <textarea
+                            id="capacidades"
+                            name="capacidades"
+                            rows="4"
+                            required
+                            placeholder="Ex.: apuração, redação, fotografia, cobertura de bairros..."
+                        ></textarea>
+
+                        <button type="submit" class="profile-button">
+                            Enviar solicitação
+                        </button>
+
+                    </form>
+
+                    <script>
+                        (function () {
+                            var botao = document.getElementById("abrirFormJornalista");
+                            var form = document.getElementById("formJornalista");
+                            var cpf = document.getElementById("cpf");
+
+                            if (botao && form) {
+                                botao.addEventListener("click", function () {
+                                    form.hidden = false;
+                                    botao.hidden = true;
+                                    form.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "start"
+                                    });
+                                });
+                            }
+
+                            if (cpf) {
+                                cpf.addEventListener("input", function () {
+                                    var d = cpf.value.replace(/\D/g, "").slice(0, 11);
+
+                                    cpf.value = d
+                                        .replace(/(\d{3})(\d)/, "$1.$2")
+                                        .replace(/(\d{3})(\d)/, "$1.$2")
+                                        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                                });
+                            }
+                        })();
+                    </script>
+
+                {% endif %}
+
+            </div>
+
+        </section>
 
         <footer class="footer">
             <span><strong>Nosso SP.</strong></span>
@@ -1196,32 +1264,35 @@
 
 </div>
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
-
 <script>
     // Carrossel automático da imagem principal
     (function () {
         const slides = document.querySelectorAll("#welcomeSlides .welcome-slide");
-        if (slides.length < 2) { return; }
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
+
+        if (slides.length < 2) {
+            return;
+        }
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
 
         let atual = 0;
+
         setInterval(function () {
-            if (document.hidden) { return; }
+            if (document.hidden) {
+                return;
+            }
+
             slides[atual].classList.remove("is-active");
+
             atual = (atual + 1) % slides.length;
+
             slides[atual].classList.add("is-active");
+
         }, 4500);
     })();
 </script>
 
-<<<<<<< HEAD
-=======
->>>>>>> 7d5b060 (Minhas alteracoes no projeto)
->>>>>>> ffd34d05689f7c6e97d1a1829021c13a90a5a30e
 </body>
 </html>

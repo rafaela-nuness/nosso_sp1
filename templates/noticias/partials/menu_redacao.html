@@ -1,0 +1,84 @@
+
+<aside class="sidebar" id="menuRedacao">
+
+    <div class="sidebar-top">
+        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
+
+        <button
+            type="button"
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Abrir menu"
+            aria-expanded="false"
+            aria-controls="menuRedacaoNav"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <p class="menu-label">SUA REDAÇÃO</p>
+
+    <nav class="menu" id="menuRedacaoNav">
+        <a href="{% url 'painel' %}" class="menu-item {% if pagina_ativa == 'painel' %}active{% endif %}">
+            <span>01</span> Início
+        </a>
+
+        <a href="{% url 'minhas_publicacoes' %}" class="menu-item {% if pagina_ativa == 'publicacoes' %}active{% endif %}">
+            <span>02</span> Minhas publicações
+        </a>
+
+        <a href="{% url 'nova_noticia' %}" class="menu-item {% if pagina_ativa == 'nova_noticia' %}active{% endif %}">
+            <span>03</span> Escrever notícia
+        </a>
+
+        <a href="{% url 'explorar' %}" class="menu-item">
+            <span>04</span> Explorar portal
+        </a>
+
+        <a href="{% url 'logout' %}" class="menu-item sair">
+            <span>↗</span> Sair da redação
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <span class="status-dot"></span>
+        <strong>Nosso SP</strong>
+    </div>
+
+</aside>
+
+<script>
+    const menuToggle = document.getElementById("menuToggle");
+    const menuRedacao = document.getElementById("menuRedacao");
+    const menuLinks = document.querySelectorAll("#menuRedacaoNav a");
+
+    if (menuToggle && menuRedacao) {
+        menuToggle.addEventListener("click", function () {
+            const aberto = menuRedacao.classList.toggle("menu-open");
+
+            menuToggle.setAttribute("aria-expanded", aberto);
+            menuToggle.setAttribute(
+                "aria-label",
+                aberto ? "Fechar menu" : "Abrir menu"
+            );
+        });
+
+        menuLinks.forEach(function (link) {
+            link.addEventListener("click", function () {
+                menuRedacao.classList.remove("menu-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                menuRedacao.classList.remove("menu-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+</script>

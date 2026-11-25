@@ -8,49 +8,13 @@
     <title>Redação | Nosso SP</title>
 
     <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/menu_redacao.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <aside class="sidebar">
-
-        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
-
-        <div class="sidebar-divider"></div>
-
-        <p class="menu-label">SUA REDAÇÃO</p>
-
-        <nav class="menu">
-
-            <a href="{% url 'painel' %}" class="menu-item active">
-                <span>01</span> Início
-            </a>
-
-            <a href="{% url 'minhas_publicacoes' %}" class="menu-item">
-                <span>02</span> Minhas publicações
-            </a>
-
-            <a href="{% url 'nova_noticia' %}" class="menu-item">
-                <span>03</span> Escrever notícia
-            </a>
-
-            <a href="{% url 'explorar' %}" class="menu-item">
-                <span>04</span> Explorar portal
-            </a>
-
-            <a href="{% url 'logout' %}" class="menu-item sair">
-                <span>↗</span> Sair da redação
-            </a>
-
-        </nav>
-
-        <div class="sidebar-bottom">
-            <span class="status-dot"></span>
-            <strong>Nosso SP</strong>
-        </div>
-
-    </aside>
+    {% include 'noticias/partials/menu_redacao.html' with pagina_ativa='painel' %}
 
 
     <main class="main-content">

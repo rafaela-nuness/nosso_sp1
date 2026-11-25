@@ -8,67 +8,14 @@
     <title>Minhas publicações | Nosso SP</title>
 
     <link rel="stylesheet" href="{% static 'css/minhas_publicacoes.css' %}">
+    <link rel="stylesheet" href="{% static 'css/menu_redacao.css' %}">
+
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <aside class="sidebar">
-        <a href="{% url 'home' %}" class="logo">nosso<span>SP.</span></a>
-
-        <div class="sidebar-divider"></div>
-
-        <p class="menu-label">SUA REDAÇÃO</p>
-
-        <nav class="menu">
-            <a href="{% url 'painel' %}" class="menu-item">
-
-                <span>01</span> Início
-            </a>
-
-            <a href="{% url 'minhas_publicacoes' %}" class="menu-item active">
-                <span>02</span> Minhas publicações
-            </a>
-
-            <a href="{% url 'nova_noticia' %}" class="menu-item">
-                <span>03</span> Escrever notícia
-            </a>
-
-            <a href="{% url 'explorar' %}" class="menu-item">
-                <span>04</span> Explorar portal
-            </a>
-
-            <a href="{% url 'logout' %}" class="menu-item sair">
-                <span>↗</span> Sair da redação
-
-                <span class="menu-icon">⌂</span> Início
-            </a>
-
-            <a href="{% url 'minhas_publicacoes' %}" class="menu-item active">
-                <span class="menu-icon">▤</span> Minhas publicações
-            </a>
-
-            <a href="{% url 'nova_noticia' %}" class="menu-item">
-                <span class="menu-icon">✎</span> Escrever notícia
-            </a>
-
-            <a href="{% url 'explorar' %}" class="menu-item">
-                <span class="menu-icon">⌕</span> Explorar portal
-            </a>
-
-            <a href="{% url 'logout' %}" class="menu-item sair">
-                <span class="menu-icon">↗</span> Sair da redação
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <span class="status-dot"></span>
-            <div>
-                <strong>Nosso SP</strong>
-            </div>
-        </div>
-    </aside>
-
+    {% include 'noticias/partials/menu_redacao.html' with pagina_ativa='publicacoes' %}
 
     <main class="main-content">
 
@@ -83,6 +30,7 @@
 
             <div class="user-info">
                 <div class="user-avatar">JS</div>
+
                 <div class="user-details">
                     <strong>{{ usuario_email }}</strong>
                     <span>Jornalista</span>
@@ -90,11 +38,14 @@
             </div>
         </header>
 
-
         <section class="page-intro">
             <div>
                 <p class="eyebrow">ACERVO DA REDAÇÃO · NOSSO SP</p>
-                <h1>Histórias que já ganharam <em>as ruas.</em></h1>
+
+                <h1>
+                    Histórias que já ganharam <em>as ruas.</em>
+                </h1>
+
                 <p class="intro-description">
                     Organize suas matérias, acompanhe suas publicações
                     e continue contando o que acontece na cidade.
@@ -106,14 +57,15 @@
             </a>
         </section>
 
-
         <section class="overview">
+
             <div class="overview-heading">
                 <p class="eyebrow">SEU TRABALHO EM NÚMEROS</p>
                 <span>ACERVO PESSOAL · 2026</span>
             </div>
 
             <div class="overview-grid">
+
                 <article class="overview-card">
                     <span>PUBLICAÇÕES</span>
                     <strong>{{ total_publicacoes|stringformat:"02d" }}</strong>
@@ -137,9 +89,9 @@
                     <strong>{{ total_rascunhos|stringformat:"02d" }}</strong>
                     <p>Em desenvolvimento</p>
                 </article>
+
             </div>
         </section>
-
 
         <section class="archive" id="lista">
 
@@ -147,6 +99,7 @@
                 <div>
                     <p class="eyebrow">SEU ACERVO</p>
                     <h2>Minhas histórias.</h2>
+
                     <p class="archive-description">
                         Todas as suas matérias reunidas em um só lugar.
                     </p>
@@ -157,16 +110,20 @@
                 </span>
             </div>
 
-
             <div class="filters">
 
                 <div class="search-box">
                     <span>⌕</span>
-                    <input type="search" id="searchInput"
-                           placeholder="Buscar uma notícia...">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Buscar uma notícia..."
+                    >
                 </div>
 
                 <div class="filter-buttons">
+
                     <button class="filter-button active" data-filter="todas">
                         Todas
                     </button>
@@ -186,24 +143,28 @@
                     <button class="filter-button" data-filter="rascunho">
                         Rascunhos
                     </button>
+
                 </div>
-
             </div>
-
 
             <div class="publication-list" id="publicationList">
 
                 {% for publicacao in publicacoes %}
 
-                    <article class="publication-item" data-status="{{ publicacao.status }}">
+                    <article
+                        class="publication-item"
+                        data-status="{{ publicacao.status }}"
+                    >
 
                         <div class="publication-number">
                             {{ forloop.counter|stringformat:"02d" }}
                         </div>
 
                         <div class="publication-content">
+
                             <span class="publication-category">
                                 {{ publicacao.categoria|upper }}
+
                                 {% if publicacao.regiao %}
                                     · {{ publicacao.regiao|upper }}
                                 {% endif %}
@@ -213,8 +174,10 @@
 
                             <p>
                                 {{ publicacao.data_criacao|date:"d/m/Y" }}
-                                <span>·</span> Por {{ usuario_email }}
+                                <span>·</span>
+                                Por {{ usuario_email }}
                             </p>
+
                         </div>
 
                         <span class="publication-status {% if publicacao.status == 'publicado' %}published{% elif publicacao.status == 'negado' %}denied{% elif publicacao.status == 'pendente' %}pending{% else %}draft{% endif %}">
@@ -222,11 +185,27 @@
                         </span>
 
                         <div class="publication-actions">
+
                             {% if publicacao.status == "publicado" %}
-                                <a href="{% url 'noticia' %}?id={{ publicacao.id }}" title="Visualizar">↗</a>
+
+                                <a
+                                    href="{% url 'noticia' %}?id={{ publicacao.id }}"
+                                    title="Visualizar"
+                                >
+                                    ↗
+                                </a>
+
                             {% elif publicacao.status == "rascunho" %}
-                                <a href="{% url 'editar_noticia' publicacao.id %}" title="Abrir rascunho">✎</a>
+
+                                <a
+                                    href="{% url 'editar_noticia' publicacao.id %}"
+                                    title="Abrir rascunho"
+                                >
+                                    ✎
+                                </a>
+
                             {% endif %}
+
                         </div>
 
                     </article>
@@ -247,27 +226,37 @@
 
         </section>
 
-
         <section class="editorial-cta">
+
             <div>
                 <p class="eyebrow">A CIDADE NÃO PARA</p>
-                <h2>Sempre existe uma nova história esperando para ser contada.</h2>
+
+                <h2>
+                    Sempre existe uma nova história esperando para ser contada.
+                </h2>
             </div>
 
             <a href="{% url 'nova_noticia' %}" class="cta-link">
                 Começar uma nova pauta <span>→</span>
             </a>
+
         </section>
 
-
         <footer class="footer">
-            <a href="{% url 'home' %}" class="footer-logo">nosso<span>SP.</span></a>
+
+            <a href="{% url 'home' %}" class="footer-logo">
+                nosso<span>SP.</span>
+            </a>
+
             <span>© 2026 Nosso SP</span>
-            <span>Jornalismo feito por e para a comunidade.</span>
+
+            <span>
+                Jornalismo feito por e para a comunidade.
+            </span>
+
         </footer>
 
     </main>
-
 
     <script>
         const searchInput = document.getElementById("searchInput");
@@ -286,6 +275,7 @@
                 const text = item.innerText.toLowerCase();
 
                 const matchesSearch = text.includes(search);
+
                 const matchesFilter =
                     currentFilter === "todas" || status === currentFilter;
 
@@ -293,19 +283,25 @@
 
                 item.style.display = visible ? "grid" : "none";
 
-                if (visible) visibleCount++;
+                if (visible) {
+                    visibleCount++;
+                }
             });
 
-            emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+            emptyMessage.style.display =
+                visibleCount === 0 ? "block" : "none";
         }
 
         searchInput.addEventListener("input", filterPublications);
 
         filterButtons.forEach(button => {
             button.addEventListener("click", () => {
-                filterButtons.forEach(item => item.classList.remove("active"));
+                filterButtons.forEach(item => {
+                    item.classList.remove("active");
+                });
 
                 button.classList.add("active");
+
                 currentFilter = button.dataset.filter;
 
                 filterPublications();
